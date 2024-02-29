@@ -34,7 +34,7 @@ def test():
 
     input_prompt = "Today is a beautiful day, and"
     input_ids = tokenizer(input_prompt, return_tensors="pt").input_ids.cuda()
-
+    breakpoint()
     # instantiate logits processors
     # logits_processor = LogitsProcessorList(
     #     [
