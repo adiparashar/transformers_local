@@ -2,14 +2,14 @@
 import torch
 import sys
 
-from transformers.models.auto.modeling_auto import AutoModelForCausalLM
+from src.transformers.models.auto.modeling_auto import AutoModelForCausalLM
 # from transformers_local.src.transformers.generation.logits_process import LogitsProcessorList, MinLengthLogitsProcessor
 
 # from transformers.utils.dummy_pt_objects import AutoModelForCausalLM
 
 # print the system path
 print(sys.path)
-from transformers.models.auto.tokenization_auto import AutoTokenizer
+from src.transformers.models.auto.tokenization_auto import AutoTokenizer
 # from transformers import (
 #     AutoTokenizer,
 #     AutoModelForCausalLM,
