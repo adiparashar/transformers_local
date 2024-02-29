@@ -353,6 +353,7 @@ class GenerationMixin:
         )
     def _make_default_codes(batch_size, num_decodes, seed):
     # Generate random offset
+        breakpoint()
         torch.manual_seed(seed)
         offset = torch.rand(batch_size, 1)
 
