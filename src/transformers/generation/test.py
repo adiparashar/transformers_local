@@ -25,8 +25,8 @@ from src.transformers.models.auto.tokenization_auto import AutoTokenizer
 # )
 def test():
     print("this is is a test")
-    tokenizer = AutoTokenizer.from_pretrained("openai-community/gpt2")
-    model = AutoModelForCausalLM.from_pretrained("openai-community/gpt2")
+    tokenizer = AutoTokenizer.from_pretrained("openai-community/gpt2").to('cuda')
+    model = AutoModelForCausalLM.from_pretrained("openai-community/gpt2").to('cuda')
 
     # set pad_token_id to eos_token_id because GPT2 does not have a EOS token
     model.config.pad_token_id = model.config.eos_token_id
