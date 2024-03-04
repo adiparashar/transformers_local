@@ -351,7 +351,7 @@ class GenerationMixin:
         raise NotImplementedError(
             "A model class needs to define a `prepare_inputs_for_generation` method in order to use `.generate()`."
         )
-    def _make_default_codes(batch_size, num_decodes, seed):
+    def _make_default_codes(self, batch_size, num_decodes, seed):
     # Generate random offset
         breakpoint()
         torch.manual_seed(seed)
