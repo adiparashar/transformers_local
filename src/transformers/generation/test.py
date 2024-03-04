@@ -2,6 +2,7 @@
 import os
 
 from transformers.generation.logits_process import LogitsProcessorList, MinLengthLogitsProcessor
+from transformers.generation.stopping_criteria import MaxLengthCriteria, StoppingCriteriaList
 
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 import torch
@@ -51,14 +52,14 @@ def test():
     #     ]
     # )
 
-    # stopping_criteria = StoppingCriteriaList([MaxLengthCriteria(max_length=20)])
+    stopping_criteria = StoppingCriteriaList([MaxLengthCriteria(max_length=20)])
     # breakpoint()
     torch.manual_seed(0)
     outputs = model.arithmetic_sample(
         input_ids = input_ids,
-        # logits_processor=logits_processor,
+        logits_processor=logits_processor,
         # logits_warper=logits_warper,
-        # stopping_criteria=stopping_criteria,
+        stopping_criteria=stopping_criteria,
     )
 
     print(tokenizer.batch_decode(outputs, skip_special_tokens=True))
