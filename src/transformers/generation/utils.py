@@ -1972,6 +1972,7 @@ class GenerationMixin:
         this_peer_finished = False  # used by synced_gpus only
         # auto-regressive generation
         seed = 0
+        breakpoint()
         codes = self._make_default_codes(input_ids.shape[0],seed)
         while True:
             if synced_gpus:
