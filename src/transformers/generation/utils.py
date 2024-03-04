@@ -2038,7 +2038,7 @@ class GenerationMixin:
             # value, to not change bucket widths) is at least 1.0.
             max_probs = cumprobs.max(dim=1, keepdim=True)[0].expand_as(cumprobs)
             all_bucket_maxes = torch.where((cumprobs == max_probs) & (cumprobs < 1.0), 1.0, cumprobs)
-
+            breakpoint()
             # Calculate code bucket mins and maxes.
             expanded_codes = codes.unsqueeze(1)
             bucket_maxes_lte_codes = all_bucket_maxes <= expanded_codes  #less than equal to 
