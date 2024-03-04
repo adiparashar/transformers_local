@@ -1,6 +1,8 @@
 # from .utils  import GenerationMixin
 import os
 
+from transformers.generation.logits_process import LogitsProcessorList, MinLengthLogitsProcessor
+
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 import torch
 import sys
@@ -36,11 +38,11 @@ def test():
     input_ids = tokenizer(input_prompt, return_tensors="pt").input_ids.to('cuda')
     breakpoint()
     # instantiate logits processors
-    # logits_processor = LogitsProcessorList(
-    #     [
-    #         MinLengthLogitsProcessor(15, eos_token_id=model.generation_config.eos_token_id),
-    #     ]
-    # )
+    logits_processor = LogitsProcessorList(
+        [
+            MinLengthLogitsProcessor(15, eos_token_id=model.generation_config.eos_token_id),
+        ]
+    )
     # instantiate logits processors
     # logits_warper = LogitsProcessorList(
     #     [
