@@ -33,7 +33,7 @@ def test():
     model.generation_config.pad_token_id = model.config.eos_token_id
 
     input_prompt = "Today is a beautiful day, and"
-    input_ids = tokenizer(input_prompt, return_tensors="pt").input_ids.cuda()
+    input_ids = tokenizer(input_prompt, return_tensors="pt").input_ids.to('cuda')
     breakpoint()
     # instantiate logits processors
     # logits_processor = LogitsProcessorList(
