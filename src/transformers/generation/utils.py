@@ -2053,7 +2053,7 @@ class GenerationMixin:
                 bucket_maxes_lte_codes.float() * 1.1).argmin(dim=1)
             )
             torch.cuda.empty_cache()
-            next_tokens = torch.tensor([perm[i].item() for i in sampled_indices_permed])
+            next_tokens = torch.tensor([perm[i].item() for i in sampled_indices_permed]).to('cuda')
 
             # next_tokens = torch.argmax(torch.nn.functional.one_hot(sampled_indices_permed, num_classes=vocab_size)[:, invperm], dim=1)
 
