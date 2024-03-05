@@ -364,7 +364,7 @@ class GenerationMixin:
         # Tile the offset and add it to the codes
         codes = (codes + offset) % 1.0
 
-        return codes.unsqueeze(1)
+        return codes
     def _prepare_model_inputs(
         self,
         inputs: Optional[torch.Tensor] = None,
@@ -2040,9 +2040,9 @@ class GenerationMixin:
             all_bucket_maxes = torch.where((cumprobs == max_probs) & (cumprobs < 1.0), 1.0, cumprobs)
             breakpoint()
             # Calculate code bucket mins and maxes.
-            # expanded_codes = codes
-            bucket_maxes_lte_codes = all_bucket_maxes <= codes  #less than equal to 
-            bucket_maxes_gt_codes = all_bucket_maxes > codes  # greater than
+            expanded_codes = codes.unsqueeze(1)
+            bucket_maxes_lte_codes = all_bucket_maxes <= expanded_codes  #less than equal to 
+            bucket_maxes_gt_codes = all_bucket_maxes > expanded_codes  # greater than
             code_bucket_mins = (all_bucket_maxes * bucket_maxes_lte_codes).max(dim=1)[0]
             code_bucket_maxes = ((all_bucket_maxes * bucket_maxes_gt_codes +
                                 bucket_maxes_lte_codes.float() * 1.1).min(dim=1)[0])
