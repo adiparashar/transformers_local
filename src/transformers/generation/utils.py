@@ -2051,8 +2051,8 @@ class GenerationMixin:
             sampled_indices_permed = (
                 (all_bucket_maxes * bucket_maxes_gt_codes +
                 bucket_maxes_lte_codes.float() * 1.1).argmin(dim=1)
-            )
-            next_tokens = torch.tensor([perm[i].item() for i in sampled_indices_permed]).to('cuda')
+            ).to('cuda')
+            next_tokens = torch.tensor([perm[i].item() for i in sampled_indices_permed])
 
             # next_tokens = torch.argmax(torch.nn.functional.one_hot(sampled_indices_permed, num_classes=vocab_size)[:, invperm], dim=1)
 
