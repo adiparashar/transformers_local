@@ -3,6 +3,7 @@ import os
 
 from transformers.generation.logits_process import LogitsProcessorList, MinLengthLogitsProcessor
 from transformers.generation.stopping_criteria import MaxLengthCriteria, StoppingCriteriaList
+from transformers.utils.dummy_pt_objects import AutoModelForSeq2SeqLM
 
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 import torch
@@ -29,7 +30,7 @@ from src.transformers.models.auto.tokenization_auto import AutoTokenizer
 def test():
     print("this is is a test")
     tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-small")
-    model = AutoModelForCausalLM.from_pretrained("google/flan-t5-small").to('cuda')
+    model = AutoModelForSeq2SeqLM.from_pretrained("google/flan-t5-small").to('cuda')
 
     # set pad_token_id to eos_token_id because GPT2 does not have a EOS token
     model.config.pad_token_id = model.config.eos_token_id
