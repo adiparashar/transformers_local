@@ -3,13 +3,12 @@ import os
 
 from transformers.generation.logits_process import LogitsProcessorList, MinLengthLogitsProcessor
 from transformers.generation.stopping_criteria import MaxLengthCriteria, StoppingCriteriaList
-from transformers.utils.dummy_pt_objects import AutoModelForSeq2SeqLM
 
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 import torch
 import sys
 
-from src.transformers.models.auto.modeling_auto import AutoModelForCausalLM
+from src.transformers.models.auto.modeling_auto import AutoModelForCausalLM, AutoModelForSeq2SeqLM
 # from transformers_local.src.transformers.generation.logits_process import LogitsProcessorList, MinLengthLogitsProcessor
 
 # from transformers.utils.dummy_pt_objects import AutoModelForCausalLM
