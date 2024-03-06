@@ -2043,9 +2043,9 @@ class GenerationMixin:
             expanded_codes = codes.unsqueeze(1).to('cuda')
             bucket_maxes_lte_codes = all_bucket_maxes <= expanded_codes  #less than equal to 
             bucket_maxes_gt_codes = all_bucket_maxes > expanded_codes  # greater than
-            code_bucket_mins = (all_bucket_maxes * bucket_maxes_lte_codes).max(dim=1)[0]
+            code_bucket_mins = (all_bucket_maxes * bucket_maxes_lte_codes).max(dim=1)[0].to('cuda')
             code_bucket_maxes = ((all_bucket_maxes * bucket_maxes_gt_codes +
-                                bucket_maxes_lte_codes.float() * 1.1).min(dim=1)[0])
+                                bucket_maxes_lte_codes.float() * 1.1).min(dim=1)[0]).to('cuda')
 
             # Compute sampled indices.
             sampled_indices_permed = (
