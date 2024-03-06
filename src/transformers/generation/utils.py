@@ -2059,7 +2059,7 @@ class GenerationMixin:
 
             
             # Compute new codes for remaining suffix.
-            codes = (codes - code_bucket_mins) / (code_bucket_maxes - code_bucket_mins)
+            codes = ((codes - code_bucket_mins) / (code_bucket_maxes - code_bucket_mins)).to('cuda')
             
             # arithemetic sampling logic finish
 
