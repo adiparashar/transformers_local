@@ -2043,9 +2043,9 @@ class GenerationMixin:
             expanded_codes = codes.unsqueeze(1).to('cuda')
             bucket_maxes_lte_codes = all_bucket_maxes <= expanded_codes  #less than equal to 
             bucket_maxes_gt_codes = all_bucket_maxes > expanded_codes  # greater than
-            code_bucket_mins = (all_bucket_maxes * bucket_maxes_lte_codes).max(dim=1)[0].to('cuda')
+            code_bucket_mins = (all_bucket_maxes * bucket_maxes_lte_codes).max(dim=1)[0]
             code_bucket_maxes = ((all_bucket_maxes * bucket_maxes_gt_codes +
-                                bucket_maxes_lte_codes.float() * 1.1).min(dim=1)[0]).to('cuda')
+                                bucket_maxes_lte_codes.float() * 1.1).min(dim=1)[0])
 
             # Compute sampled indices.
             sampled_indices_permed = (
@@ -2057,11 +2057,15 @@ class GenerationMixin:
 
             # next_tokens = torch.argmax(torch.nn.functional.one_hot(sampled_indices_permed, num_classes=vocab_size)[:, invperm], dim=1)
 
-            
+            codes = codes.to('cuda')
+            code_bucket_mins = code_bucket_mins.to('cuda')
+            code_bucket_maxes = code_bucket_maxes.to('cuda')
+
+
             # Compute new codes for remaining suffix.
             codes = ((codes - code_bucket_mins) / (code_bucket_maxes - code_bucket_mins)).to('cuda')
             
-            # arithemetic sampling logic finish
+            # arithmetic sampling logic finish
 
 
 
