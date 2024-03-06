@@ -353,7 +353,7 @@ class GenerationMixin:
         )
     def _make_default_codes(self, batch_size, num_decodes, seed):
     # Generate random offset
-        breakpoint()
+        # breakpoint()
         torch.manual_seed(seed)
         offset = torch.rand(batch_size, 1)
 
@@ -1605,7 +1605,7 @@ class GenerationMixin:
                 is_encoder_decoder=self.config.is_encoder_decoder,
                 **model_kwargs,
             )
-            breakpoint()
+            # breakpoint()
             # 13. run sample
             return self.arithmetic_sample(
                 input_ids,
@@ -1972,7 +1972,7 @@ class GenerationMixin:
         this_peer_finished = False  # used by synced_gpus only
         # auto-regressive generation
         seed = 0
-        breakpoint()
+        # breakpoint()
         codes = self._make_default_codes(input_ids.shape[0],1,seed)
         while True:
             if synced_gpus:
@@ -2038,7 +2038,7 @@ class GenerationMixin:
             # value, to not change bucket widths) is at least 1.0.
             max_probs = cumprobs.max(dim=1, keepdim=True)[0].expand_as(cumprobs)
             all_bucket_maxes = torch.where((cumprobs == max_probs) & (cumprobs < 1.0), 1.0, cumprobs)
-            breakpoint()
+            # breakpoint()
             # Calculate code bucket mins and maxes.
             expanded_codes = codes.unsqueeze(1).to('cuda')
             bucket_maxes_lte_codes = all_bucket_maxes <= expanded_codes  #less than equal to 
