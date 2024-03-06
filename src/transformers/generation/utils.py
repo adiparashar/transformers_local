@@ -2052,7 +2052,6 @@ class GenerationMixin:
                 (all_bucket_maxes * bucket_maxes_gt_codes +
                 bucket_maxes_lte_codes.float() * 1.1).argmin(dim=1)
             ).to('cuda')
-            breakpoint()
             next_tokens = torch.tensor([perm[i].item() for i in sampled_indices_permed.squeeze()], device=perm.device).to('cuda')
 
             # next_tokens = torch.argmax(torch.nn.functional.one_hot(sampled_indices_permed, num_classes=vocab_size)[:, invperm], dim=1)
@@ -2067,6 +2066,7 @@ class GenerationMixin:
             
             # arithmetic sampling logic finish
 
+            breakpoint()
 
 
             # next_tokens = torch.multinomial(probs, num_samples=1).squeeze(1)
