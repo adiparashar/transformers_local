@@ -37,7 +37,7 @@ def test():
 
     input_prompt = "Today is a beautiful day, and"
     input_ids = tokenizer(input_prompt, return_tensors="pt").input_ids.to('cuda')
-    breakpoint()
+    # breakpoint()
     # instantiate logits processors
     logits_processor = LogitsProcessorList(
         [
@@ -55,7 +55,7 @@ def test():
     stopping_criteria = StoppingCriteriaList([MaxLengthCriteria(max_length=20)])
     # breakpoint()
     torch.manual_seed(0)
-    outputs = model.arithmetic_sample(
+    outputs = model.sample(
         input_ids = input_ids,
         logits_processor=logits_processor,
         # logits_warper=logits_warper,
