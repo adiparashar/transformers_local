@@ -30,7 +30,7 @@ def test():
     print("this is is a test")
     tokenizer = AutoTokenizer.from_pretrained("distilbert/distilgpt2")
     model = AutoModelForCausalLM.from_pretrained("distilbert/distilgpt2").to('cuda')
-
+    torch.device = 'cuda'
     # set pad_token_id to eos_token_id because GPT2 does not have a EOS token
     model.config.pad_token_id = model.config.eos_token_id
     model.generation_config.pad_token_id = model.config.eos_token_id
