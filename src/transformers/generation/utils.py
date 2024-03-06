@@ -2044,19 +2044,17 @@ class GenerationMixin:
             bucket_maxes_lte_codes = all_bucket_maxes <= expanded_codes  #less than equal to 
             bucket_maxes_gt_codes = all_bucket_maxes > expanded_codes  # greater than
             code_bucket_mins = (all_bucket_maxes * bucket_maxes_lte_codes).max(dim=1)[0]
-            code_bucket_maxes = ((all_bucket_maxes * bucket_maxes_gt_codes +
-                                bucket_maxes_lte_codes.float() * 1.1).min(dim=1)[0])
+            code_bucket_maxes = ((all_bucket_maxes * bucket_maxes_gt_codes + bucket_maxes_lte_codes.squeeze(0).float() * 1.1).min(dim=1)[0])
 
             # Compute sampled indices.
             sampled_indices_permed = (
-                (all_bucket_maxes * bucket_maxes_gt_codes +
-                bucket_maxes_lte_codes.float() * 1.1).argmin(dim=1)
+                (all_bucket_maxes * bucket_maxes_gt_codes.squeeze(0) + bucket_maxes_lte_codes.squeeze(0).float() * 1.1).argmin(dim=1)
             ).to('cuda')
             breakpoint()
-            next_tokens = torch.tensor([perm[i].item() for i in sampled_indices_permed.squeeze()], device=perm.device).to('cuda')
+            # next_tokens = torch.tensor([perm[i].item() for i in sampled_indices_permed.squeeze()], device=perm.device).to('cuda')
 
-            # next_tokens = torch.argmax(torch.nn.functional.one_hot(sampled_indices_permed, num_classes=vocab_size)[:, invperm], dim=1)
-
+            next_tokens = torch.argmax(torch.nn.functional.one_hot(sampled_indices_permed, num_classes=vocab_size)[:, invperm], dim=1)
+            
             codes = codes.to('cuda')
             code_bucket_mins = code_bucket_mins.to('cuda')
             code_bucket_maxes = code_bucket_maxes.to('cuda')
