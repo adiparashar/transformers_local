@@ -2051,7 +2051,7 @@ class GenerationMixin:
             sampled_indices_permed = (
                 (all_bucket_maxes * bucket_maxes_gt_codes +
                 bucket_maxes_lte_codes.float() * 1.1).argmin(dim=1)
-            ).to(perm.device)
+            ).to('cuda')
             breakpoint()
             next_tokens = torch.tensor([perm[i].item() for i in sampled_indices_permed.squeeze()], device=perm.device).to('cuda')
 
