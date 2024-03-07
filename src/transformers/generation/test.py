@@ -63,15 +63,15 @@ def test():
     #     stopping_criteria=stopping_criteria,
     # )
     # arithmetic sampling with num_return_sequences>1
-    # outputs_arith = model.generate(
-    #     input_ids = input_ids,
-    #     logits_processor=logits_processor,
-    #     num_return_sequences = 5,
-    #     do_sample = True,
-    #     # stopping_criteria=stopping_criteria,
-    #     num_beams = 1,
-    #     use_arithmetic = True
-    # )
+    outputs_arith = model.generate(
+        input_ids = input_ids,
+        logits_processor=logits_processor,
+        num_return_sequences = 1,
+        do_sample = True,
+        # stopping_criteria=stopping_criteria,
+        num_beams = 1,
+        use_arithmetic = True
+    )
     outputs_sample = model.generate(
         input_ids = input_ids,
         logits_processor=logits_processor,
@@ -82,7 +82,7 @@ def test():
         use_arithmetic = False
     )
 
-    # print(f"Arithmetic sampling: {tokenizer.batch_decode(outputs_arith, skip_special_tokens=True)}")
-    print(f"Normal sampling: {tokenizer.batch_decode(outputs_sample, skip_special_tokens=True)}")
+    print(f"Arithmetic sampling: {tokenizer.batch_decode(outputs_arith, skip_special_tokens=True)}")
+    print(f"Normals sampling: {tokenizer.batch_decode(outputs_sample, skip_special_tokens=True)}")
 if __name__ == "__main__":
     test()

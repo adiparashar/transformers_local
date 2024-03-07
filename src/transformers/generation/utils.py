@@ -1976,7 +1976,7 @@ class GenerationMixin:
         # auto-regressive generation
         seed = 0
         # breakpoint()
-        codes = self._make_default_codes(input_ids.shape[0],1,seed)
+        codes = self._make_default_codes(input_ids.shape[0],5,seed)
         while True:
             if synced_gpus:
                 # Under synced_gpus the `forward` call must continue until all gpus complete their sequence.
