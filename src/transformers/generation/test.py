@@ -63,19 +63,19 @@ def test():
     #     stopping_criteria=stopping_criteria,
     # )
     # arithmetic sampling with num_return_sequences>1
-    outputs_arith = model.generate(
-        input_ids = input_ids,
-        logits_processor=logits_processor,
-        num_return_sequences = 5,
-        do_sample = True,
-        # stopping_criteria=stopping_criteria,
-        num_beams = 1,
-        use_arithmetic = True
-    )
+    # outputs_arith = model.generate(
+    #     input_ids = input_ids,
+    #     logits_processor=logits_processor,
+    #     num_return_sequences = 5,
+    #     do_sample = True,
+    #     # stopping_criteria=stopping_criteria,
+    #     num_beams = 1,
+    #     use_arithmetic = True
+    # )
     outputs_sample = model.generate(
         input_ids = input_ids,
         logits_processor=logits_processor,
-        num_return_sequences = 1,
+        num_return_sequences = 5,
         do_sample = True,
         # stopping_criteria=stopping_criteria,
         num_beams = 1,
