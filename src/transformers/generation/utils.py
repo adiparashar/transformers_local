@@ -2028,6 +2028,7 @@ class GenerationMixin:
 
             # sample
             # arithmetic sampling logic start
+            breakpoint()
             _, vocab_size = next_token_scores.shape
             perm = torch.randperm(next_token_scores.shape[1])
             invperm = torch.argsort(perm)
