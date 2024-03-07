@@ -618,7 +618,7 @@ class GenerationMixin:
             if model_kwargs.get("encoder_outputs") is None:
                 raise ValueError("If `is_encoder_decoder` is True, make sure that `encoder_outputs` is defined.")
             model_kwargs["encoder_outputs"] = _expand_dict_for_generation(model_kwargs["encoder_outputs"])
-
+        breakpoint()
         return input_ids, model_kwargs
 
     def _extract_past_from_model_output(self, outputs: ModelOutput, standardize_cache_format: bool = False):
@@ -2054,7 +2054,7 @@ class GenerationMixin:
             # next_tokens = torch.tensor([perm[i].item() for i in sampled_indices_permed.squeeze()], device=perm.device).to('cuda')
 
             next_tokens = torch.argmax(torch.nn.functional.one_hot(sampled_indices_permed, num_classes=vocab_size)[:, invperm], dim=1)
-            
+
             codes = codes.to('cuda')
             code_bucket_mins = code_bucket_mins.to('cuda')
             code_bucket_maxes = code_bucket_maxes.to('cuda')
