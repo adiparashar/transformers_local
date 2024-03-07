@@ -618,7 +618,7 @@ class GenerationMixin:
             if model_kwargs.get("encoder_outputs") is None:
                 raise ValueError("If `is_encoder_decoder` is True, make sure that `encoder_outputs` is defined.")
             model_kwargs["encoder_outputs"] = _expand_dict_for_generation(model_kwargs["encoder_outputs"])
-        breakpoint()
+        # breakpoint()
         return input_ids, model_kwargs
 
     def _extract_past_from_model_output(self, outputs: ModelOutput, standardize_cache_format: bool = False):
@@ -773,7 +773,10 @@ class GenerationMixin:
                 else:
                     generation_mode = GenerationMode.GREEDY_SEARCH
             else:
-                generation_mode = GenerationMode.SAMPLE
+                if generation_config.use_arithmetic is False:
+                    generation_mode = GenerationMode.SAMPLE
+                else:
+                    generation_mode = GenerationMode.ARITHMETIC
         else:
             if generation_config.num_beam_groups > 1:
                 generation_mode = GenerationMode.GROUP_BEAM_SEARCH
@@ -2050,7 +2053,7 @@ class GenerationMixin:
             sampled_indices_permed = (
                 (all_bucket_maxes * bucket_maxes_gt_codes.squeeze(0) + bucket_maxes_lte_codes.squeeze(0).float() * 1.1).argmin(dim=1)
             ).to('cuda')
-            breakpoint()
+            # breakpoint()
             # next_tokens = torch.tensor([perm[i].item() for i in sampled_indices_permed.squeeze()], device=perm.device).to('cuda')
 
             next_tokens = torch.argmax(torch.nn.functional.one_hot(sampled_indices_permed, num_classes=vocab_size)[:, invperm], dim=1)
@@ -2065,7 +2068,7 @@ class GenerationMixin:
             
             # arithmetic sampling logic finish
 
-            breakpoint()
+            # breakpoint()
 
 
             # next_tokens = torch.multinomial(probs, num_samples=1).squeeze(1)
