@@ -82,7 +82,7 @@ def test():
         use_arithmetic = False
     )
 
-    print(f"Arithmetic sampling: {tokenizer.batch_decode(outputs_arith, skip_special_tokens=True)}")
+    # print(f"Arithmetic sampling: {tokenizer.batch_decode(outputs_arith, skip_special_tokens=True)}")
     print(f"Normal sampling: {tokenizer.batch_decode(outputs_sample, skip_special_tokens=True)}")
 if __name__ == "__main__":
     test()
