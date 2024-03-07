@@ -55,20 +55,20 @@ def test():
     stopping_criteria = StoppingCriteriaList([MaxLengthCriteria(max_length=20)])
     # breakpoint()
     torch.manual_seed(0)
-    outputs = model.arithmetic_sample(
-        input_ids = input_ids,
-        logits_processor=logits_processor,
-        expand_size = 5,
-        # logits_warper=logits_warper,
-        stopping_criteria=stopping_criteria,
-    )
+    # outputs = model.arithmetic_sample(
+    #     input_ids = input_ids,
+    #     logits_processor=logits_processor,
+    #     expand_size = 5,
+    #     # logits_warper=logits_warper,
+    #     stopping_criteria=stopping_criteria,
+    # )
     # arithmetic sampling with num_return_sequences>1
     outputs_arith = model.generate(
         input_ids = input_ids,
         logits_processor=logits_processor,
         num_return_sequences = 5,
         do_sample = True,
-        stopping_criteria=stopping_criteria,
+        # stopping_criteria=stopping_criteria,
         num_beams = 1,
         use_arithmetic = True
     )
@@ -77,7 +77,7 @@ def test():
         logits_processor=logits_processor,
         num_return_sequences = 5,
         do_sample = True,
-        stopping_criteria=stopping_criteria,
+        # stopping_criteria=stopping_criteria,
         num_beams = 1,
         use_arithmetic = False
     )
