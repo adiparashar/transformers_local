@@ -33,7 +33,7 @@ def test():
     default_fwd_target_prefix = "English sentence: "
     prompt_arr = [default_fwd_instruction,default_fwd_input_prefix]
     output_dict = {}
-    for idx, d in enumerate(tqdm(data, desc="Predicting")):
+    for idx, d in enumerate(tqdm(data[:2], desc="Predicting")):
         prompt_arr.append(d['de'])
         prompt_arr.append(default_fwd_target_prefix)
         input_prompt = ('  ').join(prompt_arr)
@@ -62,7 +62,7 @@ def test():
         output_dict[idx] = {}
         output_dict[idx]['arithmetic'] = [i.split('English sentence: ')[-1].strip('\n') for i in tokenizer.batch_decode(outputs_arith, skip_special_tokens=True)]
         output_dict[idx]['sampling'] = [i.split('English sentence: ')[-1].strip('\n') for i in tokenizer.batch_decode(outputs_sample, skip_special_tokens=True)]
-        breakpoint()
+        # breakpoint()
     with open('flan_t5_wmt14_de-en_output.json','a+') as f:
         json.dump(output_dict,f)
     # input_prompt = "Today is a beautiful day, and"
