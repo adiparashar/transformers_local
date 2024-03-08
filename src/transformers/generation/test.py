@@ -38,6 +38,7 @@ def test():
         prompt_arr.append(default_fwd_target_prefix)
         input_prompt = ('\n').join(prompt_arr)
         input_ids = tokenizer(input_prompt, return_tensors="pt").input_ids.to('cuda')
+        breakpoint()
         outputs_arith = model.generate(
             input_ids = input_ids,
             # logits_processor=logits_processor,
@@ -58,9 +59,9 @@ def test():
             max_new_tokens = 100,
             use_arithmetic = False
             )
-        output_dict[d] = {}
-        output_dict[d]['arithmetic'] = tokenizer.batch_decode(outputs_arith, skip_special_tokens=True)
-        output_dict[d]['sampling'] = tokenizer.batch_decode(outputs_sample, skip_special_tokens=True)
+        output_dict[idx] = {}
+        output_dict[idx]['arithmetic'] = tokenizer.batch_decode(outputs_arith, skip_special_tokens=True)
+        output_dict[idx]['sampling'] = tokenizer.batch_decode(outputs_sample, skip_special_tokens=True)
         breakpoint()
     # input_prompt = "Today is a beautiful day, and"
     # input_ids = tokenizer(input_prompt, return_tensors="pt").input_ids.to('cuda')
