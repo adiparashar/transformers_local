@@ -87,9 +87,12 @@ def calculate_bleu_and_ngram_diversity(reference, translations):
             try:
                 translation_ngrams = ngrams(translation.split(), n)
                 # Count unique n-grams
+                breakpoint()
+
+                total_ngram_count += len(list(translation_ngrams))
                 unique_ngrams.update(translation_ngrams)
                 # Count total n-grams
-                total_ngram_count += len(list(translation_ngrams))
+                
                 breakpoint()
             except:
                 breakpoint()
