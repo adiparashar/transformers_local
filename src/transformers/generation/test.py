@@ -100,7 +100,7 @@ def calculate_bleu_and_ngram_diversity(reference, translations):
         # Update total counts
         total_unique_ngrams = len(unique_ngrams)
         ngram_diversity_score += total_unique_ngrams / total_ngram_count
-        breakpoint()
+        # breakpoint()
     return bleu_score, ngram_diversity_score
 
 if __name__ == "__main__":
