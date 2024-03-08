@@ -36,7 +36,7 @@ def test():
     for idx, d in enumerate(tqdm(data[:5], desc="Predicting")):
         prompt_arr.append(d['de'])
         prompt_arr.append(default_fwd_target_prefix)
-        input_prompt = prompt_arr.join('\n')
+        input_prompt = ('\n').join(prompt_arr)
         input_ids = tokenizer(input_prompt, return_tensors="pt").input_ids.to('cuda')
         outputs_arith = model.generate(
             input_ids = input_ids,
