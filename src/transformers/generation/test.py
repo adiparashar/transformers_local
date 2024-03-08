@@ -33,7 +33,7 @@ def test():
     default_fwd_target_prefix = "English sentence: "
     prompt_arr = [default_fwd_instruction,default_fwd_input_prefix]
     output_dict = {}
-    for idx, d in enumerate(tqdm(data[:2], desc="Predicting")):
+    for idx, d in enumerate(tqdm(data, desc="Predicting")):
         prompt_arr.append(d['de'])
         prompt_arr.append(default_fwd_target_prefix)
         input_prompt = ('  ').join(prompt_arr)
