@@ -608,7 +608,7 @@ class GenerationMixin:
                 if dict_to_expand[key] is not None and isinstance(dict_to_expand[key], torch.Tensor):
                     dict_to_expand[key] = dict_to_expand[key].repeat_interleave(expand_size, dim=0)
             return dict_to_expand
-
+        breakpoint()
         if input_ids is not None:
             input_ids = input_ids.repeat_interleave(expand_size, dim=0)
 
