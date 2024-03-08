@@ -44,6 +44,7 @@ def test():
             num_return_sequences = 5,
             do_sample = True,
             # stopping_criteria=stopping_criteria,
+            max_new_tokens = 100,
             num_beams = 1,
             use_arithmetic = True
             )
@@ -54,6 +55,7 @@ def test():
             do_sample = True,
             # stopping_criteria=stopping_criteria,
             num_beams = 1,
+            max_new_tokens = 100,
             use_arithmetic = False
             )
         output_dict[d] = {}
