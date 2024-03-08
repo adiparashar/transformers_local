@@ -15,8 +15,8 @@ from src.transformers.models.auto.tokenization_auto import AutoTokenizer
 def load_hf_data_set(split,dataset_name, dataset_subname):
         # breakpoint()
         data = {}
-        datasets.config.DOWNLOADED_DATASETS_PATH = Path('/work/pi_dhruvesh_pate_umass_edu/aparashar_umass_edu/datasets')
-        data[split] = datasets.load_dataset(dataset_name,dataset_subname, split="validation",cache_dir ='/work/pi_dhruvesh_pate_umass_edu/aparashar_umass_edu/datasets/.cache' )
+        # datasets.config.DOWNLOADED_DATASETS_PATH = Path('/work/pi_dhruvesh_pate_umass_edu/aparashar_umass_edu/datasets')
+        data[split] = datasets.load_dataset(dataset_name,dataset_subname, split="validation" )
         return data[split]
 def test():
     print("this is is a test")
