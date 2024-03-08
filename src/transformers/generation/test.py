@@ -60,8 +60,8 @@ def test():
             use_arithmetic = False
             )
         output_dict[idx] = {}
-        output_dict[idx]['arithmetic'] = [i.split('English: ')[-1] for i in tokenizer.batch_decode(outputs_arith, skip_special_tokens=True)]
-        output_dict[idx]['sampling'] = [i.split('English: ')[-1] for i in tokenizer.batch_decode(outputs_sample, skip_special_tokens=True)]
+        output_dict[idx]['arithmetic'] = [i.split('English sentence: ')[-1].strip('\n') for i in tokenizer.batch_decode(outputs_arith, skip_special_tokens=True)]
+        output_dict[idx]['sampling'] = [i.split('English sentence: ')[-1].strip('\n') for i in tokenizer.batch_decode(outputs_sample, skip_special_tokens=True)]
         breakpoint()
     # input_prompt = "Today is a beautiful day, and"
     # input_ids = tokenizer(input_prompt, return_tensors="pt").input_ids.to('cuda')
