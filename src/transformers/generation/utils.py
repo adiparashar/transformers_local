@@ -1600,7 +1600,7 @@ class GenerationMixin:
         elif generation_mode == GenerationMode.ARITHMETIC:
             # 11. prepare logits warper
             logits_warper = self._get_logits_warper(generation_config)
-
+            batch_size = input_ids.shape[0]
             # 12. expand input_ids with `num_return_sequences` additional sequences per batch
             input_ids, model_kwargs = self._expand_inputs_for_generation(
                 input_ids=input_ids,
@@ -1621,6 +1621,8 @@ class GenerationMixin:
                 return_dict_in_generate=generation_config.return_dict_in_generate,
                 synced_gpus=synced_gpus,
                 streamer=streamer,
+                batch_size = batch_size,
+                num_return_sequences = generation_config.num_return_sequences,
                 **model_kwargs,
             )
         elif generation_mode == GenerationMode.BEAM_SEARCH:
@@ -1815,6 +1817,8 @@ class GenerationMixin:
         return_dict_in_generate: Optional[bool] = None,
         synced_gpus: bool = False,
         streamer: Optional["BaseStreamer"] = None,
+        batch_size: Optional[int] = 1,
+        num_return_sequences: Optional[int] = 1,
         **model_kwargs,
     ) -> Union[GenerateNonBeamOutput, torch.LongTensor]:
         r"""
@@ -1976,7 +1980,7 @@ class GenerationMixin:
         # auto-regressive generation
         seed = 0
         # breakpoint()
-        codes = torch.flatten(self._make_default_codes(input_ids.shape[0],5,seed))
+        codes = torch.flatten(self._make_default_codes(batch_size,num_return_sequences,seed))
 
         while True:
             if synced_gpus:
