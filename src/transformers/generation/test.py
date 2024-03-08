@@ -1,4 +1,5 @@
 # from .utils  import GenerationMixin
+import json
 import os
 from pathlib import Path
 import random
@@ -26,18 +27,18 @@ def test():
     # set pad_token_id to eos_token_id because GPT2 does not have a EOS token
     model.config.pad_token_id = model.config.eos_token_id
     model.generation_config.pad_token_id = model.config.eos_token_id
-    data = random.sample(load_hf_data_set('validation','wmt14','de-en')['translation'],100)
+    data = random.sample(load_hf_data_set('validation','wmt14','de-en')['translation'],200)
     default_fwd_instruction = "Translate the following German sentence to an English sentence."
     default_fwd_input_prefix = "German sentence: "
     default_fwd_target_prefix = "English sentence: "
     prompt_arr = [default_fwd_instruction,default_fwd_input_prefix]
     output_dict = {}
-    for idx, d in enumerate(tqdm(data[:5], desc="Predicting")):
+    for idx, d in enumerate(tqdm(data, desc="Predicting")):
         prompt_arr.append(d['de'])
         prompt_arr.append(default_fwd_target_prefix)
         input_prompt = ('  ').join(prompt_arr)
         input_ids = tokenizer(input_prompt, return_tensors="pt").input_ids.to('cuda')
-        breakpoint()
+        # breakpoint()
         outputs_arith = model.generate(
             input_ids = input_ids,
             # logits_processor=logits_processor,
@@ -62,6 +63,8 @@ def test():
         output_dict[idx]['arithmetic'] = [i.split('English sentence: ')[-1].strip('\n') for i in tokenizer.batch_decode(outputs_arith, skip_special_tokens=True)]
         output_dict[idx]['sampling'] = [i.split('English sentence: ')[-1].strip('\n') for i in tokenizer.batch_decode(outputs_sample, skip_special_tokens=True)]
         breakpoint()
+    with open('flan_t5_wmt14_de-en_output.json','a+') as f:
+        json.dump(output_dict,f)
     # input_prompt = "Today is a beautiful day, and"
     # input_ids = tokenizer(input_prompt, return_tensors="pt").input_ids.to('cuda')
     # # breakpoint()
