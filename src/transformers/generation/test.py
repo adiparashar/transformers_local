@@ -6,6 +6,9 @@ import random
 from tqdm import tqdm
 from transformers.generation.logits_process import LogitsProcessorList, MinLengthLogitsProcessor
 from transformers.generation.stopping_criteria import MaxLengthCriteria, StoppingCriteriaList
+from nltk.translate.bleu_score import corpus_bleu
+from nltk.util import ngrams
+from collections import Counter
 
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 import torch
@@ -63,57 +66,35 @@ def test():
         output_dict[idx]['gt'] = d['en']
         output_dict[idx]['arithmetic'] = [i.split('English sentence: ')[-1].strip('\n') for i in tokenizer.batch_decode(outputs_arith, skip_special_tokens=True)]
         output_dict[idx]['sampling'] = [i.split('English sentence: ')[-1].strip('\n') for i in tokenizer.batch_decode(outputs_sample, skip_special_tokens=True)]
+        output_dict[idx]['bleu_score_arith'], output_dict[idx]['n_gram_div_arith'] = calculate_bleu_and_ngram_diversity(output_dict[idx]['gt'], output_dict[idx]['arithmetic'])
+        output_dict[idx]['bleu_score_sample'], output_dict[idx]['n_gram_div_sample'] = calculate_bleu_and_ngram_diversity(output_dict[idx]['gt'], output_dict[idx]['sampling'])
+        
         # breakpoint()
     with open('flan_t5_wmt14_de-en_5_output.json','a+') as f:
         json.dump(output_dict,f)
-    # input_prompt = "Today is a beautiful day, and"
-    # input_ids = tokenizer(input_prompt, return_tensors="pt").input_ids.to('cuda')
-    # # breakpoint()
-    # # instantiate logits processors
-    # # logits_processor = LogitsProcessorList(
-    # #     [
-    # #         MinLengthLogitsProcessor(15, eos_token_id=model.generation_config.eos_token_id),
-    # #     ]
-    # # )
-    # # instantiate logits processors
-    # # logits_warper = LogitsProcessorList(
-    # #     [
-    # #         TopKLogitsWarper(50),
-    # #         TemperatureLogitsWarper(0.7),
-    # #     ]
-    # # )
+def calculate_bleu_and_ngram_diversity(reference, translations):
+    bleu_score = corpus_bleu([reference], translations)
 
-    # stopping_criteria = StoppingCriteriaList([MaxLengthCriteria(max_length=20)])
-    # # breakpoint()
-    # torch.manual_seed(0)
-    # # outputs = model.arithmetic_sample(
-    # #     input_ids = input_ids,
-    # #     logits_processor=logits_processor,
-    # #     expand_size = 5,
-    # #     # logits_warper=logits_warper,
-    # #     stopping_criteria=stopping_criteria,
-    # # )
-    # # arithmetic sampling with num_return_sequences>1
-    # outputs_arith = model.generate(
-    #     input_ids = input_ids,
-    #     logits_processor=logits_processor,
-    #     num_return_sequences = 5,
-    #     do_sample = True,
-    #     # stopping_criteria=stopping_criteria,
-    #     num_beams = 1,
-    #     use_arithmetic = True
-    # )
-    # outputs_sample = model.generate(
-    #     input_ids = input_ids,
-    #     logits_processor=logits_processor,
-    #     num_return_sequences = 5,
-    #     do_sample = True,
-    #     # stopping_criteria=stopping_criteria,
-    #     num_beams = 1,
-    #     use_arithmetic = False
-    # )
+    n_values = [1, 2, 3, 4]
+    total_unique_ngrams = 0
+    ngram_diversity_score = 0
+    for n in n_values:
+        unique_ngrams = set()
+        total_ngram_count = 0
 
-    # print(f"Arithmetic sampling: {tokenizer.batch_decode(outputs_arith, skip_special_tokens=True)}")
-    # print(f"Normals sampling: {tokenizer.batch_decode(outputs_sample, skip_special_tokens=True)}")
+        for translation in translations:
+            # Compute n-grams
+            translation_ngrams = ngrams(translation.split(), n)
+            # Count unique n-grams
+            unique_ngrams.update(translation_ngrams)
+            # Count total n-grams
+            total_ngram_count += len(list(translation_ngrams))
+
+        # Update total counts
+        total_unique_ngrams = len(unique_ngrams)
+        ngram_diversity_score += sum(total_unique_ngrams) / sum(total_ngram_count)
+
+    return bleu_score, ngram_diversity_score
+
 if __name__ == "__main__":
     test()
