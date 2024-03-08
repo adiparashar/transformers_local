@@ -20,8 +20,8 @@ def load_hf_data_set(split,dataset_name, dataset_subname):
         return data[split]
 def test():
     print("this is is a test")
-    tokenizer = AutoTokenizer.from_pretrained("google/gemma-2b")
-    model = AutoModelForCausalLM.from_pretrained("google/gemma-2b").to('cuda')
+    tokenizer = AutoTokenizer.from_pretrained("google/gemma-2b-it")
+    model = AutoModelForCausalLM.from_pretrained("google/gemma-2b-it").to('cuda')
     torch.device = 'cuda'
     # set pad_token_id to eos_token_id because GPT2 does not have a EOS token
     model.config.pad_token_id = model.config.eos_token_id
