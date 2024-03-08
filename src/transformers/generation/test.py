@@ -60,10 +60,11 @@ def test():
             use_arithmetic = False
             )
         output_dict[idx] = {}
+        output_dict[idx]['gt'] = d['en']
         output_dict[idx]['arithmetic'] = [i.split('English sentence: ')[-1].strip('\n') for i in tokenizer.batch_decode(outputs_arith, skip_special_tokens=True)]
         output_dict[idx]['sampling'] = [i.split('English sentence: ')[-1].strip('\n') for i in tokenizer.batch_decode(outputs_sample, skip_special_tokens=True)]
         # breakpoint()
-    with open('flan_t5_wmt14_de-en_output.json','a+') as f:
+    with open('flan_t5_wmt14_de-en_5_output.json','a+') as f:
         json.dump(output_dict,f)
     # input_prompt = "Today is a beautiful day, and"
     # input_ids = tokenizer(input_prompt, return_tensors="pt").input_ids.to('cuda')
