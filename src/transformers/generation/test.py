@@ -45,7 +45,7 @@ def test():
         outputs_arith = model.generate(
             input_ids = input_ids,
             # logits_processor=logits_processor,
-            num_return_sequences = 5,
+            num_return_sequences = 10,
             do_sample = True,
             # stopping_criteria=stopping_criteria,
             max_new_tokens = 100,
@@ -56,7 +56,7 @@ def test():
         outputs_sample = model.generate(
             input_ids = input_ids,
             # logits_processor=logits_processor,
-            num_return_sequences = 5,
+            num_return_sequences = 10,
             do_sample = True,
             temperature = 0.5,
             # stopping_criteria=stopping_criteria,
@@ -72,7 +72,7 @@ def test():
         output_dict[idx]['bleu_score_sample'], output_dict[idx]['n_gram_div_sample'] = calculate_bleu_and_ngram_diversity(output_dict[idx]['gt'], output_dict[idx]['sampling'])
         
         # breakpoint()
-    with open('flan_t5_wmt14_de-en_5__temp_0.5_output.json','a+') as f:
+    with open('flan_t5_wmt14_de-en_10__temp_0.5_output.json','a+') as f:
         json.dump(output_dict,f)
 def calculate_bleu_and_ngram_diversity(reference, translations):
     bleu_score = corpus_bleu([reference]*len(translations), translations)
