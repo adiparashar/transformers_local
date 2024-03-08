@@ -73,7 +73,7 @@ def test():
     with open('flan_t5_wmt14_de-en_5_output.json','a+') as f:
         json.dump(output_dict,f)
 def calculate_bleu_and_ngram_diversity(reference, translations):
-    bleu_score = corpus_bleu([reference], translations)
+    bleu_score = corpus_bleu([reference]*len(translations), translations)
 
     n_values = [1, 2, 3, 4]
     total_unique_ngrams = 0
