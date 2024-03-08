@@ -608,7 +608,7 @@ class GenerationMixin:
                 if dict_to_expand[key] is not None and isinstance(dict_to_expand[key], torch.Tensor):
                     dict_to_expand[key] = dict_to_expand[key].repeat_interleave(expand_size, dim=0)
             return dict_to_expand
-        breakpoint()
+        # breakpoint()
         if input_ids is not None:
             input_ids = input_ids.repeat_interleave(expand_size, dim=0)
 
@@ -2033,7 +2033,7 @@ class GenerationMixin:
 
             # sample
             # arithmetic sampling logic start
-            breakpoint()
+            # breakpoint()
             _, vocab_size = next_token_scores.shape
             perm = torch.randperm(next_token_scores.shape[1])
             invperm = torch.argsort(perm)
@@ -2051,7 +2051,7 @@ class GenerationMixin:
             # Calculate code bucket mins and maxes.
             
             expanded_codes = codes.unsqueeze(1).to('cuda')
-            breakpoint()
+            # breakpoint()
             bucket_maxes_lte_codes = all_bucket_maxes <= expanded_codes  #less than equal to 
             bucket_maxes_gt_codes = all_bucket_maxes > expanded_codes  # greater than
             code_bucket_mins = (all_bucket_maxes * bucket_maxes_lte_codes).max(dim=1)[0]
@@ -2061,7 +2061,7 @@ class GenerationMixin:
             sampled_indices_permed = (
                 (all_bucket_maxes * bucket_maxes_gt_codes.squeeze(0) + bucket_maxes_lte_codes.squeeze(0).float() * 1.1).argmin(dim=1)
             ).to('cuda')
-            breakpoint()
+            # breakpoint()
             # next_tokens = torch.tensor([perm[i].item() for i in sampled_indices_permed.squeeze()], device=perm.device).to('cuda')
 
             next_tokens = torch.argmax(torch.nn.functional.one_hot(sampled_indices_permed, num_classes=vocab_size)[:, invperm], dim=1)
@@ -3054,7 +3054,7 @@ class GenerationMixin:
                     )
 
             # sample
-            breakpoint()
+            # breakpoint()
             probs = nn.functional.softmax(next_token_scores, dim=-1)
             next_tokens = torch.multinomial(probs, num_samples=1).squeeze(1)
             # breakpoint()
