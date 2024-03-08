@@ -21,12 +21,11 @@ def load_hf_data_set(split,dataset_name, dataset_subname):
 def test():
     print("this is is a test")
     tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-base")
-    model = AutoModelForCausalLM.from_pretrained("google/flan-t5-base").to('cuda')
+    model = AutoModelForSeq2SeqLM.from_pretrained("google/flan-t5-base").to('cuda')
     torch.device = 'cuda'
     # set pad_token_id to eos_token_id because GPT2 does not have a EOS token
     model.config.pad_token_id = model.config.eos_token_id
     model.generation_config.pad_token_id = model.config.eos_token_id
-
     data = random.sample(load_hf_data_set('validation','wmt14','de-en')['translation'],100)
     default_fwd_instruction = "Translate the following German sentence to an English sentence."
     default_fwd_input_prefix = "German sentence: "
