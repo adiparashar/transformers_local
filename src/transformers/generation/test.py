@@ -28,9 +28,9 @@ def test():
     model.generation_config.pad_token_id = model.config.eos_token_id
 
     data = random.sample(load_hf_data_set('validation','wmt14','de-en')['translation'],100)
-    default_fwd_instruction = "Translate the following German sentence to English:"
-    default_fwd_input_prefix = "German: "
-    default_fwd_target_prefix = "English: "
+    default_fwd_instruction = "Translate the following German sentence to an English sentence."
+    default_fwd_input_prefix = "German sentence: "
+    default_fwd_target_prefix = "English sentence: "
     prompt_arr = [default_fwd_instruction,default_fwd_input_prefix]
     output_dict = {}
     for idx, d in enumerate(tqdm(data[:5], desc="Predicting")):
