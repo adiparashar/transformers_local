@@ -1976,7 +1976,8 @@ class GenerationMixin:
         # auto-regressive generation
         seed = 0
         # breakpoint()
-        codes = self._make_default_codes(input_ids.shape[0],5,seed)
+        codes = torch.flatten(self._make_default_codes(input_ids.shape[0],5,seed))
+
         while True:
             if synced_gpus:
                 # Under synced_gpus the `forward` call must continue until all gpus complete their sequence.
@@ -2044,7 +2045,9 @@ class GenerationMixin:
             all_bucket_maxes = torch.where((cumprobs == max_probs) & (cumprobs < 1.0), 1.0, cumprobs)
             # breakpoint()
             # Calculate code bucket mins and maxes.
+            
             expanded_codes = codes.unsqueeze(1).to('cuda')
+            breakpoint()
             bucket_maxes_lte_codes = all_bucket_maxes <= expanded_codes  #less than equal to 
             bucket_maxes_gt_codes = all_bucket_maxes > expanded_codes  # greater than
             code_bucket_mins = (all_bucket_maxes * bucket_maxes_lte_codes).max(dim=1)[0]
