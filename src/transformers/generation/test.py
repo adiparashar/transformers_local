@@ -92,7 +92,7 @@ def calculate_bleu_and_ngram_diversity(reference, translations):
 
         # Update total counts
         total_unique_ngrams = len(unique_ngrams)
-        ngram_diversity_score += sum(total_unique_ngrams) / sum(total_ngram_count)
+        ngram_diversity_score += total_unique_ngrams / total_ngram_count
 
     return bleu_score, ngram_diversity_score
 
