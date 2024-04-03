@@ -635,7 +635,7 @@ class _LazyConfigMapping(OrderedDict):
         value = self._mapping[key]
         module_name = model_type_to_module_name(key)
         if module_name not in self._modules:
-            self._modules[module_name] = importlib.import_module(f".{module_name}", "src.transformers.models")
+            self._modules[module_name] = importlib.import_module(f".{module_name}", "transformers.models")
         if hasattr(self._modules[module_name], value):
             return getattr(self._modules[module_name], value)
 
@@ -691,7 +691,7 @@ class _LazyLoadAllMappings(OrderedDict):
 
         for model_type, map_name in self._mapping.items():
             module_name = model_type_to_module_name(model_type)
-            module = importlib.import_module(f".{module_name}", "src.transformers.models")
+            module = importlib.import_module(f".{module_name}", "transformers.models")
             mapping = getattr(module, map_name)
             self._data.update(mapping)
 
