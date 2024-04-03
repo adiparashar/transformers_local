@@ -4,8 +4,8 @@ import os
 from pathlib import Path
 import random
 from tqdm import tqdm
-from transformers.generation.logits_process import LogitsProcessorList, MinLengthLogitsProcessor
-from transformers.generation.stopping_criteria import MaxLengthCriteria, StoppingCriteriaList
+from src.transformers.generation.logits_process import LogitsProcessorList, MinLengthLogitsProcessor
+from src.transformers.generation.stopping_criteria import MaxLengthCriteria, StoppingCriteriaList
 from nltk.translate.bleu_score import corpus_bleu
 from nltk.util import ngrams
 from collections import Counter
@@ -25,8 +25,8 @@ def load_hf_data_set(split,dataset_name, dataset_subname):
 def test():
     print("this is is a test")
     tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-base")
-    model = AutoModelForSeq2SeqLM.from_pretrained("google/flan-t5-base").to('cuda')
-    torch.device = 'cuda'
+    model = AutoModelForSeq2SeqLM.from_pretrained("google/flan-t5-base")
+    # torch.device = 'cuda'
     # set pad_token_id to eos_token_id because GPT2 does not have a EOS token
     model.config.pad_token_id = model.config.eos_token_id
     model.generation_config.pad_token_id = model.config.eos_token_id

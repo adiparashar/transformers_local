@@ -57,6 +57,7 @@ class GenerationMode(ExplicitEnum):
     BEAM_SAMPLE = "beam_sample"
     CONSTRAINED_BEAM_SEARCH = "constrained_beam_search"
     GROUP_BEAM_SEARCH = "group_beam_search"
+    ARITHMETIC = "arithmetic_sample"
 
 
 class GenerationConfig(PushToHubMixin):
@@ -441,7 +442,13 @@ class GenerationConfig(PushToHubMixin):
             elif self.do_sample is True:
                 generation_mode = GenerationMode.BEAM_SAMPLE
             else:
-                generation_mode = GenerationMode.BEAM_SEARCH
+                if self.use_arithmetic is False:
+
+                    generation_mode = GenerationMode.SAMPLE
+
+                else:
+
+                    generation_mode = GenerationMode.ARITHMETIC
 
         # Assisted generation may extend some generation modes
         if assistant_model is not None or self.prompt_lookup_num_tokens is not None:
