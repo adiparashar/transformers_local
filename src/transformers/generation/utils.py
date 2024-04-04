@@ -1614,7 +1614,7 @@ class GenerationMixin:
                 **model_kwargs,
             )
 
-            # breakpoint()
+            breakpoint()
 
             # 13. run sample
 
