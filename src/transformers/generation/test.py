@@ -24,8 +24,8 @@ def load_hf_data_set(split,dataset_name, dataset_subname):
         return data[split]
 def test():
     print("this is is a test")
-    tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-base")
-    model = AutoModelForSeq2SeqLM.from_pretrained("google/flan-t5-base").cuda()
+    tokenizer = AutoTokenizer.from_pretrained("google/gemma-2b")
+    model = AutoModelForCausalLM.from_pretrained("google/gemma-2b").cuda()
     torch.device = 'cuda'
     # set pad_token_id to eos_token_id because GPT2 does not have a EOS token
     model.config.pad_token_id = model.config.eos_token_id
@@ -41,7 +41,7 @@ def test():
         prompt_arr.append(default_fwd_target_prefix)
         input_prompt = ('  ').join(prompt_arr)
         input_ids = tokenizer(input_prompt, return_tensors="pt").input_ids.to('cuda')
-        # breakpoint()
+        breakpoint()
         outputs_arith = model.generate(
             input_ids = input_ids,
             # logits_processor=logits_processor,
