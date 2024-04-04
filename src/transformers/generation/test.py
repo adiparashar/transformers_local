@@ -109,3 +109,4 @@ def calculate_bleu_and_ngram_diversity(reference, translations):
 
 if __name__ == "__main__":
     test()
+    
