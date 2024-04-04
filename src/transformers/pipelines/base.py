@@ -246,8 +246,7 @@ def infer_framework_load_model(
         if config.architectures:
             classes = []
             for architecture in config.architectures:
-                transformers_module = importlib.import_module("transformers")
-                if look_pt:
+                transformers_module = importlib.import_module("src.transformers")                if look_pt:
                     _class = getattr(transformers_module, architecture, None)
                     if _class is not None:
                         classes.append(_class)
