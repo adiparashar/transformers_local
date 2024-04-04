@@ -435,21 +435,17 @@ class GenerationConfig(PushToHubMixin):
                 else:
                     generation_mode = GenerationMode.GREEDY_SEARCH
             else:
-                generation_mode = GenerationMode.SAMPLE
+                if self.use_arithmetic is False:
+                    generation_mode = GenerationMode.SAMPLE
+                else:
+                    generation_mode = GenerationMode.ARITHMETIC
         else:
             if self.num_beam_groups > 1:
                 generation_mode = GenerationMode.GROUP_BEAM_SEARCH
             elif self.do_sample is True:
                 generation_mode = GenerationMode.BEAM_SAMPLE
             else:
-                if self.use_arithmetic is False:
-
-                    generation_mode = GenerationMode.SAMPLE
-
-                else:
-
-                    generation_mode = GenerationMode.ARITHMETIC
-
+                generation_mode = GenerationMode.BEAM_SEARCH
         # Assisted generation may extend some generation modes
         if assistant_model is not None or self.prompt_lookup_num_tokens is not None:
             if generation_mode in ("greedy_search", "sample"):
