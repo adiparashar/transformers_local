@@ -1847,37 +1847,21 @@ class GenerationMixin:
     def arithmetic_sample(
 
         self,
-
         input_ids: torch.LongTensor,
-
         logits_processor: Optional[LogitsProcessorList] = None,
-
         stopping_criteria: Optional[StoppingCriteriaList] = None,
-
         logits_warper: Optional[LogitsProcessorList] = None,
-
         max_length: Optional[int] = None,
-
         pad_token_id: Optional[int] = None,
-
         eos_token_id: Optional[Union[int, List[int]]] = None,
-
         output_attentions: Optional[bool] = None,
-
         output_hidden_states: Optional[bool] = None,
-
         output_scores: Optional[bool] = None,
-
+        output_logits: Optional[bool] = None,
         return_dict_in_generate: Optional[bool] = None,
-
         synced_gpus: bool = False,
-
         streamer: Optional["BaseStreamer"] = None,
-
-        batch_size: Optional[int] = 1,
-
         num_return_sequences: Optional[int] = 1,
-
         **model_kwargs,
 
     ) -> Union[GenerateNonBeamOutput, torch.LongTensor]:
@@ -2063,7 +2047,8 @@ class GenerationMixin:
         this_peer_finished = False
         unfinished_sequences = torch.ones(batch_size, dtype=torch.long, device=input_ids.device)
         model_kwargs["cache_position"] = torch.arange(cur_len, device=input_ids.device)
-
+        seed = 0
+        codes = torch.flatten(self._make_default_codes(batch_size,num_return_sequences,seed))
         while self._has_unfinished_sequences(this_peer_finished, synced_gpus, device=input_ids.device):
             # prepare model inputs
             model_inputs = self.prepare_inputs_for_generation(input_ids, **model_kwargs)
