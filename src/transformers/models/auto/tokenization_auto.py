@@ -513,7 +513,7 @@ def tokenizer_class_from_name(class_name: str):
         if class_name in tokenizers:
             module_name = model_type_to_module_name(module_name)
 
-            module = importlib.import_module(f".{module_name}", "transformers.models")
+            module = importlib.import_module(f".{module_name}", "src.transformers.models")
             try:
                 return getattr(module, class_name)
             except AttributeError:
