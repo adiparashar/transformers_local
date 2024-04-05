@@ -2040,6 +2040,7 @@ class GenerationMixin:
             encoder_hidden_states = (
                 model_kwargs["encoder_outputs"].get("hidden_states") if output_hidden_states else None
             )
+        seed = 0
         codes = torch.flatten(self._make_default_codes(batch_size,num_return_sequences,seed))
 
         # keep track of which sequences are already finished
@@ -2049,7 +2050,7 @@ class GenerationMixin:
         this_peer_finished = False
         unfinished_sequences = torch.ones(batch_size, dtype=torch.long, device=input_ids.device)
         model_kwargs["cache_position"] = torch.arange(cur_len, device=input_ids.device)
-        seed = 0
+        
         # breakpoint()
         while self._has_unfinished_sequences(this_peer_finished, synced_gpus, device=input_ids.device):
             # prepare model inputs
