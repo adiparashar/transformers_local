@@ -2049,7 +2049,7 @@ class GenerationMixin:
         model_kwargs["cache_position"] = torch.arange(cur_len, device=input_ids.device)
         seed = 0
         codes = torch.flatten(self._make_default_codes(batch_size,num_return_sequences,seed))
-        breakpoint()
+        # breakpoint()
         while self._has_unfinished_sequences(this_peer_finished, synced_gpus, device=input_ids.device):
             # prepare model inputs
             model_inputs = self.prepare_inputs_for_generation(input_ids, **model_kwargs)
@@ -2061,7 +2061,7 @@ class GenerationMixin:
                 output_attentions=output_attentions,
                 output_hidden_states=output_hidden_states,
             )
-            breakpoint()
+            # breakpoint()
             if synced_gpus and this_peer_finished:
                 continue  # don't waste resources running the code we don't need
 
