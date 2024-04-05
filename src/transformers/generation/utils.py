@@ -2070,7 +2070,7 @@ class GenerationMixin:
             # pre-process distribution
             next_token_scores = logits_processor(input_ids, next_token_logits)
             next_token_scores = logits_warper(input_ids, next_token_scores)
-
+            breakpoint()
             # Store scores, attentions and hidden_states when required
             if return_dict_in_generate:
                 if output_scores:
@@ -2124,7 +2124,7 @@ class GenerationMixin:
 
             all_bucket_maxes = torch.where((cumprobs == max_probs) & (cumprobs < 1.0), 1.0, cumprobs)
 
-            # breakpoint()
+            breakpoint()
 
             # Calculate code bucket mins and maxes.
 
@@ -2132,7 +2132,7 @@ class GenerationMixin:
 
             expanded_codes = codes.unsqueeze(1).to('cuda')
 
-            # breakpoint()
+            breakpoint()
 
             bucket_maxes_lte_codes = all_bucket_maxes <= expanded_codes  #less than equal to 
 
