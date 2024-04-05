@@ -2091,111 +2091,111 @@ class GenerationMixin:
                         else (outputs.hidden_states,)
                     )
 
-                # sample
-                # probs = nn.functional.softmax(next_token_scores, dim=-1)
-                # next_tokens = torch.multinomial(probs, num_samples=1).squeeze(1)
-                # arithmetic sampling logic start
+            # sample
+            # probs = nn.functional.softmax(next_token_scores, dim=-1)
+            # next_tokens = torch.multinomial(probs, num_samples=1).squeeze(1)
+            # arithmetic sampling logic start
 
-                # breakpoint()
+            # breakpoint()
 
-                _, vocab_size = next_token_scores.shape
+            _, vocab_size = next_token_scores.shape
 
-                perm = torch.randperm(next_token_scores.shape[1])
+            perm = torch.randperm(next_token_scores.shape[1])
 
-                invperm = torch.argsort(perm)
+            invperm = torch.argsort(perm)
 
-                next_token_scores = next_token_scores[:, perm]
+            next_token_scores = next_token_scores[:, perm]
 
-                probs = nn.functional.softmax(next_token_scores, dim=-1)
+            probs = nn.functional.softmax(next_token_scores, dim=-1)
 
-                transposed_probs = probs.transpose(0, 1)
+            transposed_probs = probs.transpose(0, 1)
 
-                cumprobs = torch.cumsum(transposed_probs, dim=0).transpose(0, 1)
+            cumprobs = torch.cumsum(transposed_probs, dim=0).transpose(0, 1)
 
-                
-
-
-
-                # Because of precision, make sure the max value (and everything with that
-
-                # value, to not change bucket widths) is at least 1.0.
-
-                max_probs = cumprobs.max(dim=1, keepdim=True)[0].expand_as(cumprobs)
-
-                all_bucket_maxes = torch.where((cumprobs == max_probs) & (cumprobs < 1.0), 1.0, cumprobs)
-
-                # breakpoint()
-
-                # Calculate code bucket mins and maxes.
-
-                
-
-                expanded_codes = codes.unsqueeze(1).to('cuda')
-
-                # breakpoint()
-
-                bucket_maxes_lte_codes = all_bucket_maxes <= expanded_codes  #less than equal to 
-
-                bucket_maxes_gt_codes = all_bucket_maxes > expanded_codes  # greater than
-
-                code_bucket_mins = (all_bucket_maxes * bucket_maxes_lte_codes).max(dim=1)[0]
-
-                code_bucket_maxes = ((all_bucket_maxes * bucket_maxes_gt_codes + bucket_maxes_lte_codes.squeeze(0).float() * 1.1).min(dim=1)[0])
+            
 
 
 
-                # Compute sampled indices.
+            # Because of precision, make sure the max value (and everything with that
 
-                sampled_indices_permed = (
+            # value, to not change bucket widths) is at least 1.0.
 
-                    (all_bucket_maxes * bucket_maxes_gt_codes.squeeze(0) + bucket_maxes_lte_codes.squeeze(0).float() * 1.1).argmin(dim=1)
+            max_probs = cumprobs.max(dim=1, keepdim=True)[0].expand_as(cumprobs)
 
-                ).to('cuda')
+            all_bucket_maxes = torch.where((cumprobs == max_probs) & (cumprobs < 1.0), 1.0, cumprobs)
 
-                # breakpoint()
+            # breakpoint()
 
-                # next_tokens = torch.tensor([perm[i].item() for i in sampled_indices_permed.squeeze()], device=perm.device).to('cuda')
+            # Calculate code bucket mins and maxes.
+
+            
+
+            expanded_codes = codes.unsqueeze(1).to('cuda')
+
+            # breakpoint()
+
+            bucket_maxes_lte_codes = all_bucket_maxes <= expanded_codes  #less than equal to 
+
+            bucket_maxes_gt_codes = all_bucket_maxes > expanded_codes  # greater than
+
+            code_bucket_mins = (all_bucket_maxes * bucket_maxes_lte_codes).max(dim=1)[0]
+
+            code_bucket_maxes = ((all_bucket_maxes * bucket_maxes_gt_codes + bucket_maxes_lte_codes.squeeze(0).float() * 1.1).min(dim=1)[0])
 
 
 
-                next_tokens = torch.argmax(torch.nn.functional.one_hot(sampled_indices_permed, num_classes=vocab_size)[:, invperm], dim=1)
+            # Compute sampled indices.
+
+            sampled_indices_permed = (
+
+                (all_bucket_maxes * bucket_maxes_gt_codes.squeeze(0) + bucket_maxes_lte_codes.squeeze(0).float() * 1.1).argmin(dim=1)
+
+            ).to('cuda')
+
+            # breakpoint()
+
+            # next_tokens = torch.tensor([perm[i].item() for i in sampled_indices_permed.squeeze()], device=perm.device).to('cuda')
 
 
 
-                codes = codes.to('cuda')
-
-                code_bucket_mins = code_bucket_mins.to('cuda')
-
-                code_bucket_maxes = code_bucket_maxes.to('cuda')
+            next_tokens = torch.argmax(torch.nn.functional.one_hot(sampled_indices_permed, num_classes=vocab_size)[:, invperm], dim=1)
 
 
 
+            codes = codes.to('cuda')
+
+            code_bucket_mins = code_bucket_mins.to('cuda')
+
+            code_bucket_maxes = code_bucket_maxes.to('cuda')
 
 
-                # Compute new codes for remaining suffix.
 
-                codes = ((codes - code_bucket_mins) / (code_bucket_maxes - code_bucket_mins)).to('cuda')
 
-                # arithmetic sampling logic finish
 
-                # finished sentences should have their next token be a padding token
-                if eos_token_id is not None:
-                    if pad_token_id is None:
-                        raise ValueError("If `eos_token_id` is defined, make sure that `pad_token_id` is defined.")
-                    next_tokens = next_tokens * unfinished_sequences + pad_token_id * (1 - unfinished_sequences)
+            # Compute new codes for remaining suffix.
 
-                # update generated ids, model inputs, and length for next step
-                input_ids = torch.cat([input_ids, next_tokens[:, None]], dim=-1)
-                if streamer is not None:
-                    streamer.put(next_tokens.cpu())
-                model_kwargs = self._update_model_kwargs_for_generation(
-                    outputs,
-                    model_kwargs,
-                    is_encoder_decoder=self.config.is_encoder_decoder,
-                )
+            codes = ((codes - code_bucket_mins) / (code_bucket_maxes - code_bucket_mins)).to('cuda')
 
-                unfinished_sequences = unfinished_sequences & ~stopping_criteria(input_ids, scores)
-                this_peer_finished = unfinished_sequences.max() == 0
+            # arithmetic sampling logic finish
+
+            # finished sentences should have their next token be a padding token
+            if eos_token_id is not None:
+                if pad_token_id is None:
+                    raise ValueError("If `eos_token_id` is defined, make sure that `pad_token_id` is defined.")
+                next_tokens = next_tokens * unfinished_sequences + pad_token_id * (1 - unfinished_sequences)
+
+            # update generated ids, model inputs, and length for next step
+            input_ids = torch.cat([input_ids, next_tokens[:, None]], dim=-1)
+            if streamer is not None:
+                streamer.put(next_tokens.cpu())
+            model_kwargs = self._update_model_kwargs_for_generation(
+                outputs,
+                model_kwargs,
+                is_encoder_decoder=self.config.is_encoder_decoder,
+            )
+
+            unfinished_sequences = unfinished_sequences & ~stopping_criteria(input_ids, scores)
+            this_peer_finished = unfinished_sequences.max() == 0
 
         if streamer is not None:
             streamer.end()
