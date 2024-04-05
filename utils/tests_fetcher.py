@@ -371,7 +371,7 @@ def get_impacted_files_from_tiny_model_summary(diff_with_last_commit: bool = Fal
                     else f"modeling_{framework}_{module.split('.')[-1]}.py"
                 )
                 files.add(
-                    f"src.transformers.{module}.{fn}".replace(".", os.path.sep).replace(f"{os.path.sep}py", ".py")
+                    f"transformers.{module}.{fn}".replace(".", os.path.sep).replace(f"{os.path.sep}py", ".py")
                 )
 
     return sorted(files)

@@ -40,7 +40,7 @@ if __name__ == "__main__":
     parser.add_argument("--check_lib", action="store_true", help="Whether to check the build or the actual package.")
     args = parser.parse_args()
     if args.check_lib:
-        transformers_module = importlib.import_module("src.transformers")        transformers_path = Path(transformers_module.__file__).parent
+        transformers_module = importlib.import_module("transformers")        transformers_path = Path(transformers_module.__file__).parent
     else:
         transformers_path = Path.cwd() / "build/lib/transformers"
     if not test_custom_files_are_present(transformers_path):

@@ -676,7 +676,7 @@ def load_tool(task_or_repo_id, model_repo_id=None, remote=False, token=None, **k
     """
     if task_or_repo_id in TASK_MAPPING:
         tool_class_name = TASK_MAPPING[task_or_repo_id]
-        main_module = importlib.import_module("src.transformers")        tools_module = main_module.tools
+        main_module = importlib.import_module("transformers")        tools_module = main_module.tools
         tool_class = getattr(tools_module, tool_class_name)
 
         if remote:

@@ -4,8 +4,8 @@ import os
 from pathlib import Path
 import random
 from tqdm import tqdm
-from src.transformers.generation.logits_process import LogitsProcessorList, MinLengthLogitsProcessor
-from src.transformers.generation.stopping_criteria import MaxLengthCriteria, StoppingCriteriaList
+from transformers.generation.logits_process import LogitsProcessorList, MinLengthLogitsProcessor
+from transformers.generation.stopping_criteria import MaxLengthCriteria, StoppingCriteriaList
 from nltk.translate.bleu_score import corpus_bleu
 from nltk.util import ngrams
 from collections import Counter
@@ -14,8 +14,8 @@ os.environ['KMP_DUPLICATE_LIB_OK']='True'
 import torch
 import sys
 import datasets
-from src.transformers.models.auto.modeling_auto import AutoModelForCausalLM, AutoModelForSeq2SeqLM
-from src.transformers.models.auto.tokenization_auto import AutoTokenizer
+from transformers.models.auto.modeling_auto import AutoModelForCausalLM, AutoModelForSeq2SeqLM
+from transformers.models.auto.tokenization_auto import AutoTokenizer
 def load_hf_data_set(split,dataset_name, dataset_subname):
         # breakpoint()
         data = {}

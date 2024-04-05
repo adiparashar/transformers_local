@@ -100,7 +100,7 @@ def _setup_default_tools():
     if _tools_are_initialized:
         return
 
-    main_module = importlib.import_module("src.transformers")    tools_module = main_module.tools
+    main_module = importlib.import_module("transformers")    tools_module = main_module.tools
 
     remote_tools = get_remote_tools()
     for task_name, tool_class_name in TASK_MAPPING.items():

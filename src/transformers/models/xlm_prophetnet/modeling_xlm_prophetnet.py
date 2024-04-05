@@ -48,7 +48,7 @@ _CONFIG_FOR_DOC = "XLMProphetNetConfig"
 from ..deprecated._archive_maps import XLM_PROPHETNET_PRETRAINED_MODEL_ARCHIVE_LIST  # noqa: F401, E402
 
 
-# Copied from src.transformers.models.prophetnet.modeling_prophetnet.PROPHETNET_START_DOCSTRING with ProphetNetConfig->XLMProphetNetConfig
+# Copied from transformers.models.prophetnet.modeling_prophetnet.PROPHETNET_START_DOCSTRING with ProphetNetConfig->XLMProphetNetConfig
 XLM_PROPHETNET_START_DOCSTRING = r"""
     This model inherits from [`PreTrainedModel`]. Check the superclass documentation for the generic methods the
     library implements for all its model (such as downloading or saving, resizing the input embeddings, pruning heads
@@ -68,7 +68,7 @@ XLM_PROPHETNET_START_DOCSTRING = r"""
             configuration. Check out the [`~PreTrainedModel.from_pretrained`] method to load the model weights.
 """
 
-# Copied from src.transformers.models.prophetnet.modeling_prophetnet.PROPHETNET_INPUTS_DOCSTRING with ProphetNet->XLMProphetNet
+# Copied from transformers.models.prophetnet.modeling_prophetnet.PROPHETNET_INPUTS_DOCSTRING with ProphetNet->XLMProphetNet
 XLM_PROPHETNET_INPUTS_DOCSTRING = r"""
     Args:
         input_ids (`torch.LongTensor` of shape `(batch_size, sequence_length)`):
@@ -143,7 +143,7 @@ XLM_PROPHETNET_INPUTS_DOCSTRING = r"""
 """
 
 
-# Copied from src.transformers.models.prophetnet.modeling_prophetnet.PROPHETNET_STANDALONE_INPUTS_DOCSTRING with ProphetNet->XLMProphetNet
+# Copied from transformers.models.prophetnet.modeling_prophetnet.PROPHETNET_STANDALONE_INPUTS_DOCSTRING with ProphetNet->XLMProphetNet
 XLM_PROPHETNET_STANDALONE_INPUTS_DOCSTRING = r"""
     Args:
         input_ids (`torch.LongTensor` of shape `(batch_size, sequence_length)`):
