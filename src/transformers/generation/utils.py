@@ -1605,7 +1605,7 @@ class GenerationMixin:
             # 11. prepare logits warper
             logits_warper = self._get_logits_warper(generation_config)
             batch_size = input_ids.shape[0]
-            breakpoint()
+            # breakpoint()
             # 12. expand input_ids with `num_return_sequences` additional sequences per batch
             input_ids, model_kwargs = self._expand_inputs_for_generation(
                 input_ids=input_ids,
@@ -1614,7 +1614,7 @@ class GenerationMixin:
                 **model_kwargs,
             )
 
-            breakpoint()
+            # breakpoint()
 
             # 13. run sample
 
@@ -2072,7 +2072,7 @@ class GenerationMixin:
             # pre-process distribution
             next_token_scores = logits_processor(input_ids, next_token_logits)
             next_token_scores = logits_warper(input_ids, next_token_scores)
-            breakpoint()
+            # breakpoint()
             # Store scores, attentions and hidden_states when required
             if return_dict_in_generate:
                 if output_scores:
@@ -2126,7 +2126,7 @@ class GenerationMixin:
 
             all_bucket_maxes = torch.where((cumprobs == max_probs) & (cumprobs < 1.0), 1.0, cumprobs)
 
-            breakpoint()
+            # breakpoint()
 
             # Calculate code bucket mins and maxes.
 
@@ -2134,7 +2134,7 @@ class GenerationMixin:
 
             expanded_codes = codes.unsqueeze(1).to('cuda')
 
-            breakpoint()
+            # breakpoint()
 
             bucket_maxes_lte_codes = all_bucket_maxes <= expanded_codes  #less than equal to 
 

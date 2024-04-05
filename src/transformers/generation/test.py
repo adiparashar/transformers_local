@@ -41,7 +41,7 @@ def test():
         prompt_arr.append(default_fwd_target_prefix)
         input_prompt = ('  ').join(prompt_arr)
         input_ids = tokenizer(input_prompt, return_tensors="pt").input_ids.to('cuda')
-        breakpoint()
+        # breakpoint()
         outputs_arith = model.generate(
             input_ids = input_ids,
             # logits_processor=logits_processor,
