@@ -1605,7 +1605,7 @@ class GenerationMixin:
             # 11. prepare logits warper
             logits_warper = self._get_logits_warper(generation_config)
             batch_size = input_ids.shape[0]
-
+            breakpoint()
             # 12. expand input_ids with `num_return_sequences` additional sequences per batch
             input_ids, model_kwargs = self._expand_inputs_for_generation(
                 input_ids=input_ids,
@@ -1614,7 +1614,7 @@ class GenerationMixin:
                 **model_kwargs,
             )
 
-            # breakpoint()
+            breakpoint()
 
             # 13. run sample
 
