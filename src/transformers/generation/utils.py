@@ -1861,6 +1861,7 @@ class GenerationMixin:
         return_dict_in_generate: Optional[bool] = None,
         synced_gpus: bool = False,
         streamer: Optional["BaseStreamer"] = None,
+        batch_size : Optional[int] = 1,
         num_return_sequences: Optional[int] = 1,
         **model_kwargs,
 
