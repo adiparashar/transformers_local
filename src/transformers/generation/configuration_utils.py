@@ -315,6 +315,7 @@ class GenerationConfig(PushToHubMixin):
         self.penalty_alpha = kwargs.pop("penalty_alpha", None)
         self.use_cache = kwargs.pop("use_cache", True)
         self.use_arithmetic = kwargs.pop("use_arithmetic",True)
+        self.arithmetic_seed = kwargs.pop("arithmetic_seed",0)
         # Parameters for manipulation of the model output logits
         self.temperature = kwargs.pop("temperature", 1.0)
         self.top_k = kwargs.pop("top_k", 50)
