@@ -16,6 +16,7 @@
 
 import copy
 import inspect
+import time
 import warnings
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Union
@@ -2112,13 +2113,9 @@ class GenerationMixin:
             probs = nn.functional.softmax(next_token_scores, dim=-1)
 
             transposed_probs = probs.transpose(0, 1)
-
+            cum_start_time = time.time()
             cumprobs = torch.cumsum(transposed_probs, dim=0).transpose(0, 1)
-
-            
-
-
-
+            cum_end_time = time.time() - cum_start_time
             # Because of precision, make sure the max value (and everything with that
 
             # value, to not change bucket widths) is at least 1.0.
@@ -2148,21 +2145,21 @@ class GenerationMixin:
 
 
             # Compute sampled indices.
-
+            sample_start_time = time.time()
             sampled_indices_permed = (
 
                 (all_bucket_maxes * bucket_maxes_gt_codes.squeeze(0) + bucket_maxes_lte_codes.squeeze(0).float() * 1.1).argmin(dim=1)
 
             ).to('cuda')
-
+            sample_end_time = time.time() - sample_start_time
             # breakpoint()
 
             # next_tokens = torch.tensor([perm[i].item() for i in sampled_indices_permed.squeeze()], device=perm.device).to('cuda')
 
 
-
+            one_hot_start_time = time.time()
             next_tokens = torch.argmax(torch.nn.functional.one_hot(sampled_indices_permed, num_classes=vocab_size)[:, invperm], dim=1)
-
+            one_hot_end_time = time.time() - one_hot_start_time
 
 
             codes = codes.to('cuda')
@@ -2171,7 +2168,7 @@ class GenerationMixin:
 
             code_bucket_maxes = code_bucket_maxes.to('cuda')
 
-
+            breakpoint()
 
 
 
