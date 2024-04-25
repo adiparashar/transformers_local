@@ -45,7 +45,7 @@ def test():
         outputs_arith = model.generate(
             input_ids = input_ids,
             # logits_processor=logits_processor,
-            num_return_sequences = 20,
+            num_return_sequences = 40,
             do_sample = True,
             # stopping_criteria=stopping_criteria,
             max_new_tokens = 100,
