@@ -2160,8 +2160,9 @@ class GenerationMixin:
             one_hot_start_time = time.time()
             next_tokens = torch.argmax(torch.nn.functional.one_hot(sampled_indices_permed, num_classes=vocab_size)[:, invperm], dim=1)
             one_hot_end_time = time.time() - one_hot_start_time
-
-
+            one_hot_start_time2 = time.time()
+            next_tokens2 = torch.gather(perm, 0, sampled_indices_permed.view(-1, 1)).squeeze()
+            one_hot_end_time2 = time.time() - one_hot_start_time2
             codes = codes.to('cuda')
 
             code_bucket_mins = code_bucket_mins.to('cuda')
