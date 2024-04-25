@@ -2106,7 +2106,7 @@ class GenerationMixin:
 
             perm = torch.randperm(next_token_scores.shape[1])
 
-            invperm = torch.argsort(perm)
+            invperm = torch.argsort(perm).cuda()
 
             next_token_scores = next_token_scores[:, perm]
 
