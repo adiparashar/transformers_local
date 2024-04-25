@@ -641,7 +641,7 @@ class _LazyConfigMapping(OrderedDict):
 
         # Some of the mappings have entries model_type -> config of another model type. In that case we try to grab the
         # object at the top level.
-        transformers_module = importlib.import_module("transformers")        
+        transformers_module = importlib.import_module("src.transformers")        
         return getattr(transformers_module, value)
 
     def keys(self):
