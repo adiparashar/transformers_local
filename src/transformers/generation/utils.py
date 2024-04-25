@@ -2104,7 +2104,7 @@ class GenerationMixin:
 
             _, vocab_size = next_token_scores.shape
 
-            perm = torch.randperm(next_token_scores.shape[1])
+            perm = torch.randperm(next_token_scores.shape[1]).cuda()
 
             invperm = torch.argsort(perm).cuda()
 
@@ -2161,7 +2161,7 @@ class GenerationMixin:
             next_tokens = torch.argmax(torch.nn.functional.one_hot(sampled_indices_permed, num_classes=vocab_size)[:, invperm], dim=1)
             one_hot_end_time = time.time() - one_hot_start_time
             one_hot_start_time2 = time.time()
-            next_tokens2 = invperm[sampled_indices_permed].to('cuda')
+            next_tokens2 = perm[sampled_indices_permed]
 
             one_hot_end_time2 = time.time() - one_hot_start_time2
             codes = codes.to('cuda')
