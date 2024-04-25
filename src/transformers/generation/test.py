@@ -70,7 +70,7 @@ def test():
         outputs_sample = model.generate(
             input_ids = input_ids,
             # logits_processor=logits_processor,
-            num_return_sequences = 20,
+            num_return_sequences = 60,
             do_sample = True,
             # stopping_criteria=stopping_criteria,
             num_beams = 1,
