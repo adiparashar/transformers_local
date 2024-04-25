@@ -3,6 +3,7 @@ import json
 import os
 from pathlib import Path
 import random
+import time
 from tqdm import tqdm
 from src.transformers.generation.logits_process import LogitsProcessorList, MinLengthLogitsProcessor
 from src.transformers.generation.stopping_criteria import MaxLengthCriteria, StoppingCriteriaList
@@ -42,17 +43,7 @@ def test():
         input_prompt = ('  ').join(prompt_arr)
         input_ids = tokenizer(input_prompt, return_tensors="pt").input_ids.to('cuda')
         # breakpoint()
-        outputs_arith = model.generate(
-            input_ids = input_ids,
-            # logits_processor=logits_processor,
-            num_return_sequences = 40,
-            do_sample = True,
-            # stopping_criteria=stopping_criteria,
-            max_new_tokens = 100,
-            num_beams = 1,
-            use_arithmetic = True
-            )
-            
+        arithttime =time.time()
         outputs_arith = model.generate(
             input_ids = input_ids,
             # logits_processor=logits_processor,
@@ -63,6 +54,19 @@ def test():
             num_beams = 1,
             use_arithmetic = True
             )
+        arithttime2 =time.time()-arithttime
+            
+        # outputs_arith = model.generate(
+        #     input_ids = input_ids,
+        #     # logits_processor=logits_processor,
+        #     num_return_sequences = 60,
+        #     do_sample = True,
+        #     # stopping_criteria=stopping_criteria,
+        #     max_new_tokens = 100,
+        #     num_beams = 1,
+        #     use_arithmetic = True
+        #     )
+        sample_time = time.time()
         outputs_sample = model.generate(
             input_ids = input_ids,
             # logits_processor=logits_processor,
@@ -73,6 +77,8 @@ def test():
             max_new_tokens = 100,
             use_arithmetic = False
             )
+        sample_time2 = time.time()-sample_time
+        breakpoint()
         output_dict[idx] = {}
         output_dict[idx]['gt'] = d['en']
         output_dict[idx]['arithmetic'] = [i.split('English sentence: ')[-1].strip('\n') for i in tokenizer.batch_decode(outputs_arith, skip_special_tokens=True)]
