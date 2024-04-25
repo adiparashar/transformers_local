@@ -4,8 +4,8 @@ import os
 from pathlib import Path
 import random
 from tqdm import tqdm
-from transformers.generation.logits_process import LogitsProcessorList, MinLengthLogitsProcessor
-from transformers.generation.stopping_criteria import MaxLengthCriteria, StoppingCriteriaList
+from src.transformers.generation.logits_process import LogitsProcessorList, MinLengthLogitsProcessor
+from src.transformers.generation.stopping_criteria import MaxLengthCriteria, StoppingCriteriaList
 from nltk.translate.bleu_score import corpus_bleu
 from nltk.util import ngrams
 from collections import Counter
