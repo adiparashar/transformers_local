@@ -14,8 +14,8 @@ os.environ['KMP_DUPLICATE_LIB_OK']='True'
 import torch
 import sys
 import datasets
-from transformers.models.auto.modeling_auto import AutoModelForCausalLM, AutoModelForSeq2SeqLM
-from transformers.models.auto.tokenization_auto import AutoTokenizer
+from src.transformers.models.auto.modeling_auto import AutoModelForCausalLM, AutoModelForSeq2SeqLM
+from src.transformers.models.auto.tokenization_auto import AutoTokenizer
 def load_hf_data_set(split,dataset_name, dataset_subname):
         # breakpoint()
         data = {}
