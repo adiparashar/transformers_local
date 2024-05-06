@@ -127,7 +127,8 @@ def test():
         prompt_arr = demos + [prompt_arr]
         prompt_arr = [element for sublist in prompt_arr for element in sublist]
         # print(prompt_arr)
-        input_prompt = turn_prefix_human + (' \n').join(prompt_arr) + turn_suffix + ' ' + turn_prefix_model
+        # input_prompt = turn_prefix_human + (' \n').join(prompt_arr) + turn_suffix + ' ' + turn_prefix_model
+        input_prompt = (' \n').join(prompt_arr)
     
         input_ids = tokenizer(input_prompt, return_tensors="pt").input_ids.to('cuda')
         # breakpoint()

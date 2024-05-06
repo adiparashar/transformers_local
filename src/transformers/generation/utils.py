@@ -2057,7 +2057,7 @@ class GenerationMixin:
         while self._has_unfinished_sequences(this_peer_finished, synced_gpus, device=input_ids.device):
             # prepare model inputs
             model_inputs = self.prepare_inputs_for_generation(input_ids, **model_kwargs)
-
+            breakpoint()
             # forward pass to get next token
             outputs = self(
                 **model_inputs,
@@ -2065,7 +2065,7 @@ class GenerationMixin:
                 output_attentions=output_attentions,
                 output_hidden_states=output_hidden_states,
             )
-            # breakpoint()
+            breakpoint()
             if synced_gpus and this_peer_finished:
                 continue  # don't waste resources running the code we don't need
 
