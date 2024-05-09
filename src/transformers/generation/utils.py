@@ -17,6 +17,7 @@
 import copy
 import inspect
 import time
+from collections import defaultdict, OrderedDict
 import warnings
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Union
@@ -2056,21 +2057,20 @@ class GenerationMixin:
         # breakpoint()
         while self._has_unfinished_sequences(this_peer_finished, synced_gpus, device=input_ids.device):
             # prepare model inputs
+            # breakpoint()
             model_inputs = self.prepare_inputs_for_generation(input_ids, **model_kwargs)
-            breakpoint()
-            # forward pass to get next token
+
             outputs = self(
-                **model_inputs,
-                return_dict=True,
-                output_attentions=output_attentions,
-                output_hidden_states=output_hidden_states,
-            )
-            breakpoint()
+            **model_inputs,
+            return_dict=True,
+            output_attentions=output_attentions,
+            output_hidden_states=output_hidden_states,
+                )
             if synced_gpus and this_peer_finished:
                 continue  # don't waste resources running the code we don't need
 
             next_token_logits = outputs.logits[:, -1, :]
-
+            # breakpoint()
             # pre-process distribution
             next_token_scores = logits_processor(input_ids, next_token_logits)
             next_token_scores = logits_warper(input_ids, next_token_scores)
@@ -2103,7 +2103,7 @@ class GenerationMixin:
             # breakpoint()
 
             _, vocab_size = next_token_scores.shape
-
+            # breakpoint()
             perm = torch.randperm(next_token_scores.shape[1]).cuda()
 
             invperm = torch.argsort(perm)
@@ -2113,16 +2113,14 @@ class GenerationMixin:
             probs = nn.functional.softmax(next_token_scores, dim=-1)
 
             transposed_probs = probs.transpose(0, 1)
-            cum_start_time = time.time()
             cumprobs = torch.cumsum(transposed_probs, dim=0).transpose(0, 1)
-            cum_end_time = time.time() - cum_start_time
             # Because of precision, make sure the max value (and everything with that
 
             # value, to not change bucket widths) is at least 1.0.
 
             max_probs = cumprobs.max(dim=1, keepdim=True)[0].expand_as(cumprobs)
 
-            all_bucket_maxes = torch.where((cumprobs == max_probs) & (cumprobs < 1.0), 1.0, cumprobs)
+            all_bucket_maxes = torch.where((cumprobs == max_probs) & (cumprobs < 1.0), 1.0, cumprobs).to('cuda')
 
             # breakpoint()
 
@@ -2145,25 +2143,20 @@ class GenerationMixin:
 
 
             # Compute sampled indices.
-            sample_start_time = time.time()
             sampled_indices_permed = (
 
                 (all_bucket_maxes * bucket_maxes_gt_codes.squeeze(0) + bucket_maxes_lte_codes.squeeze(0).float() * 1.1).argmin(dim=1)
 
             ).to('cuda')
-            sample_end_time = time.time() - sample_start_time
             # breakpoint()
 
             # next_tokens = torch.tensor([perm[i].item() for i in sampled_indices_permed.squeeze()], device=perm.device).to('cuda')
 
 
-            one_hot_start_time = time.time()
-            # next_tokens = torch.argmax(torch.nn.functional.one_hot(sampled_indices_permed, num_classes=vocab_size)[:, invperm], dim=1)
-            one_hot_end_time = time.time() - one_hot_start_time
-            one_hot_start_time2 = time.time()
-            next_tokens = perm[sampled_indices_permed]
+            next_tokens = torch.argmax(torch.nn.functional.one_hot(sampled_indices_permed, num_classes=vocab_size)[:, invperm], dim=1)
+            
+            # next_tokens = perm[sampled_indices_permed]
 
-            one_hot_end_time2 = time.time() - one_hot_start_time2
             codes = codes.to('cuda')
 
             code_bucket_mins = code_bucket_mins.to('cuda')
