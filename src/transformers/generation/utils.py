@@ -2104,7 +2104,7 @@ class GenerationMixin:
 
             _, vocab_size = next_token_scores.shape
             # breakpoint()
-            perm = torch.randperm(next_token_scores.shape[1]).cuda()
+            perm = torch.randperm(next_token_scores.shape[1]).to('cuda')
 
             invperm = torch.argsort(perm)
 
