@@ -2101,7 +2101,7 @@ class GenerationMixin:
             # arithmetic sampling logic start
 
             # breakpoint()
-            device = torch.device("cuda:0")
+            device = next_token_scores.device
             _, vocab_size = next_token_scores.shape
             # breakpoint()
             perm = torch.randperm(next_token_scores.shape[1]).to(device)
