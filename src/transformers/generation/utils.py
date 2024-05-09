@@ -2101,10 +2101,10 @@ class GenerationMixin:
             # arithmetic sampling logic start
 
             # breakpoint()
-
+            device = torch.device("cuda:0")
             _, vocab_size = next_token_scores.shape
             # breakpoint()
-            perm = torch.randperm(next_token_scores.shape[1]).to('cuda')
+            perm = torch.randperm(next_token_scores.shape[1]).to(device)
 
             invperm = torch.argsort(perm)
 
@@ -2120,7 +2120,7 @@ class GenerationMixin:
 
             max_probs = cumprobs.max(dim=1, keepdim=True)[0].expand_as(cumprobs)
 
-            all_bucket_maxes = torch.where((cumprobs == max_probs) & (cumprobs < 1.0), 1.0, cumprobs).to('cuda')
+            all_bucket_maxes = torch.where((cumprobs == max_probs) & (cumprobs < 1.0), 1.0, cumprobs).to(device)
 
             # breakpoint()
 
@@ -2128,7 +2128,7 @@ class GenerationMixin:
 
             
 
-            expanded_codes = codes.unsqueeze(1).to('cuda')
+            expanded_codes = codes.unsqueeze(1).to(device)
 
             # breakpoint()
 
@@ -2147,7 +2147,7 @@ class GenerationMixin:
 
                 (all_bucket_maxes * bucket_maxes_gt_codes.squeeze(0) + bucket_maxes_lte_codes.squeeze(0).float() * 1.1).argmin(dim=1)
 
-            ).to('cuda')
+            ).to(device)
             # breakpoint()
 
             # next_tokens = torch.tensor([perm[i].item() for i in sampled_indices_permed.squeeze()], device=perm.device).to('cuda')
@@ -2157,11 +2157,11 @@ class GenerationMixin:
             
             # next_tokens = perm[sampled_indices_permed]
 
-            codes = codes.to('cuda')
+            codes = codes.to(device)
 
-            code_bucket_mins = code_bucket_mins.to('cuda')
+            code_bucket_mins = code_bucket_mins.to(device)
 
-            code_bucket_maxes = code_bucket_maxes.to('cuda')
+            code_bucket_maxes = code_bucket_maxes.to(device)
 
             # breakpoint()
 
@@ -2169,7 +2169,7 @@ class GenerationMixin:
 
             # Compute new codes for remaining suffix.
 
-            codes = ((codes - code_bucket_mins) / (code_bucket_maxes - code_bucket_mins)).to('cuda')
+            codes = ((codes - code_bucket_mins) / (code_bucket_maxes - code_bucket_mins)).to(device)
 
             # arithmetic sampling logic finish
 
