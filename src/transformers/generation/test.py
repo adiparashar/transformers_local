@@ -23,10 +23,24 @@ def load_hf_data_set(split,dataset_name, dataset_subname):
         # datasets.config.DOWNLOADED_DATASETS_PATH = Path('/work/pi_dhruvesh_pate_umass_edu/aparashar_umass_edu/datasets')
         data[split] = datasets.load_dataset(dataset_name,dataset_subname, split="validation" )
         return data[split]
+def _make_default_codes(batch_size, num_decodes, seed,add_offset):
+    # Generate random offset
+        # breakpoint()
+        torch.manual_seed(seed)
+        offset = torch.rand(batch_size, 1)
+
+        # Generate evenly spaced codes
+        codes = torch.arange(1, num_decodes + 1, dtype=torch.float32) / (num_decodes + 1)
+        codes = codes.unsqueeze(0).repeat(batch_size, 1)
+
+        # Tile the offset and add it to the codes
+        codes = (codes + offset + add_offset) % 1.0
+
+        return codes
 def test():
     print("this is is a test")
-    tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-2-7b-hf")
-    model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-2-7b-hf").cuda()
+    tokenizer = AutoTokenizer.from_pretrained("google/gemma-2b")
+    model = AutoModelForCausalLM.from_pretrained("google/gemma-2b").cuda()
     accelerator = Accelerator()
     if False:
             # breakpoint()
@@ -145,56 +159,77 @@ def test():
     
         input_ids = tokenizer(input_prompt, return_tensors="pt").input_ids.to('cuda')
         # breakpoint()
-        num_return_sequences_per_gpu = 80 // accelerator.num_processes
+#         num_return_sequences_per_gpu = 80 // accelerator.num_processes
 
-# Divide the total number of sequences across GPUs
-        with accelerator.split_between_processes(range(accelerator.num_processes)) as idx:
-            # Store outputs of generations in a list
-            outputs = []
+# # Divide the total number of sequences across GPUs
+#         with accelerator.split_between_processes(range(accelerator.num_processes)) as idx:
+#             # Store outputs of generations in a list
+#             outputs = []
 
-            # Have each GPU generate sequences
-            for i in idx:
-                # Generate sequences on the current GPU
-                output = model.generate(
-                    input_ids=input_ids,
-                    num_return_sequences=num_return_sequences_per_gpu,
-                    do_sample=True,
-                    num_beams=1,
-                    max_new_tokens=100,
-                    use_arithmetic = True
+#             # Have each GPU generate sequences
+#             for i in idx:
+#                 # Generate sequences on the current GPU
+#                 output = model.generate(
+#                     input_ids=input_ids,
+#                     num_return_sequences=num_return_sequences_per_gpu,
+#                     do_sample=True,
+#                     num_beams=1,
+#                     max_new_tokens=100,
+#                     use_arithmetic = True
+#                 )
+
+#                 # Decode and store the generated sequences
+#                 decoded_outputs = [tokenizer.decode(sequence) for sequence in output]
+#                 with open('output.txt','a+') as f:
+#                     f.write("Decoded outputs")
+#                     f.write(str('\n'.join(decoded_outputs)))
+#                     f.write("\n")
+#                 outputs.extend(decoded_outputs)
+#                 with open('output.txt','a+') as f:
+#                     f.write(f"outputs{idx}")
+#                     f.write(str('\n'.join(outputs)))
+#                     f.write("\n")
+
+#                 breakpoint()
+#         # Gather the generated sequences from all GPUs
+
+#         gathered_outputs = accelerator.gather(outputs)
+#         with open('output.txt','a+') as f:
+#                     f.write("gathered_outputs")
+#                     f.write(str('\n'.join(gathered_outputs)))
+#                     f.write("\n")
+#         arithttime =time.time()
+        num_return_sequences = 80
+       
+        chunk_size = 10
+        num_chunks = num_return_sequences//chunk_size
+        outputs_ariths = []
+        for c in range(num_chunks):
+            codes = torch.flatten(_make_default_codes(1,chunk_size,0,c*(1/num_return_sequences)))
+            # code_chunk = codes[c*chunk_size:chunk_size*(c+1)]
+            breakpoint()
+            outputs_arith = model.generate(
+                input_ids = input_ids,
+                # logits_processor=logits_processor,
+                num_return_sequences = chunk_size,
+                do_sample = True,
+                # stopping_criteria=stopping_criteria,
+                max_new_tokens = 100,
+                num_beams = 1,
+                codes = codes,
+                use_arithmetic = True
                 )
-
-                # Decode and store the generated sequences
-                decoded_outputs = [tokenizer.decode(sequence) for sequence in output]
-                with open('output.txt','a+') as f:
-                    f.write("Decoded outputs")
+            decoded_outputs = [tokenizer.decode(o[len(input_ids):], skip_special_tokens=True) for o in outputs_arith]
+            with open('output.txt','a+') as f:
+                    f.write(f"Outputs chunk {c}")
                     f.write(str('\n'.join(decoded_outputs)))
                     f.write("\n")
-                outputs.extend(decoded_outputs)
-                with open('output.txt','a+') as f:
-                    f.write(f"outputs{idx}")
-                    f.write(str('\n'.join(outputs)))
+            outputs_ariths.append(decoded_outputs)
+        with open('output_fin.txt','a+') as f:
+                    f.write(f"Outputs")
+                    f.write(str('\n'.join(outputs_ariths)))
                     f.write("\n")
-
-                breakpoint()
-        # Gather the generated sequences from all GPUs
-
-        gathered_outputs = accelerator.gather(outputs)
-        with open('output.txt','a+') as f:
-                    f.write("gathered_outputs")
-                    f.write(str('\n'.join(gathered_outputs)))
-                    f.write("\n")
-        arithttime =time.time()
-        # outputs_arith = model.generate(
-        #     input_ids = input_ids,
-        #     # logits_processor=logits_processor,
-        #     num_return_sequences = 10,
-        #     do_sample = True,
-        #     # stopping_criteria=stopping_criteria,
-        #     max_new_tokens = 100,
-        #     num_beams = 1,
-        #     use_arithmetic = True
-        #     )
+        breakpoint()
         # arithttime2 =time.time()-arithttime
             
         # # outputs_arith = model.generate(

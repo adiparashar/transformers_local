@@ -1628,6 +1628,7 @@ class GenerationMixin:
                 pad_token_id=generation_config.pad_token_id,
                 eos_token_id=generation_config.eos_token_id,
                 seed = generation_config.arithmetic_seed,
+                codes = generation_config.codes,
                 output_scores=generation_config.output_scores,
                 return_dict_in_generate=generation_config.return_dict_in_generate,
                 synced_gpus=synced_gpus,
@@ -1851,6 +1852,7 @@ class GenerationMixin:
 
         self,
         input_ids: torch.LongTensor,
+        codes : torch.Tensor,
         logits_processor: Optional[LogitsProcessorList] = None,
         stopping_criteria: Optional[StoppingCriteriaList] = None,
         logits_warper: Optional[LogitsProcessorList] = None,
@@ -2044,9 +2046,11 @@ class GenerationMixin:
             encoder_hidden_states = (
                 model_kwargs["encoder_outputs"].get("hidden_states") if output_hidden_states else None
             )
-        codes = torch.flatten(self._make_default_codes(batch_size,num_return_sequences,seed))
-
+        # codes = torch.flatten(self._make_default_codes(batch_size,num_return_sequences,seed))
+        # codes = torch.flatten(codes)
+        # breakpoint()
         # keep track of which sequences are already finished
+        
         batch_size, cur_len = input_ids.shape
         if "inputs_embeds" in model_kwargs:
             cur_len = model_kwargs["inputs_embeds"].shape[1]
